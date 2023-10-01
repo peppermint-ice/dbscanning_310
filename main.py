@@ -3,7 +3,7 @@ import pandas as pd
 from db_clusterization import run_dbscan
 import db_clusterization
 import os
-
+import get_camera_info
 
 # Set the parameters
 
