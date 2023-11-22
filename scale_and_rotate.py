@@ -53,7 +53,6 @@ def fit_circle_to_point_cloud_and_save_ply(point_cloud, output_ply_path, inlier_
     return center, radius, normal
 
 
-
 # export the original point cloud
 # export the pot point cloud
 # export the plant point cloud
