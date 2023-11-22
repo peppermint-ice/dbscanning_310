@@ -1,12 +1,7 @@
 """ This file contains functions regarding working with camera points"""
-import pandas as pd
-from sklearn.cluster import DBSCAN
 from sklearn.metrics import pairwise_distances
 import numpy as np
 import open3d as o3d
-import matplotlib.pyplot as plt
-import plyfile
-import random
 import db_clusterization
 
 

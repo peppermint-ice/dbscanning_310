@@ -12,7 +12,7 @@ min_samples = 70
 
 # To run for 1 file
 
-ply_file_path = 'sfm.ply'
+ply_file_path = 'cropped_point_cloud.ply'
 exported_file_path = 'clustered.ply'
 clusters = run_dbscan(
     ply_file_path,
