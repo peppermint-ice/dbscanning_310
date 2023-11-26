@@ -31,7 +31,7 @@ def create_a_sphere(camera_points):
     distances = pairwise_distances(camera_points, [central_point])
     # print(distances)
     distance_95 = np.percentile(distances, 95)
-    distance = distance_95 * 1.1
+    distance = distance_95 * 1.0
     return [central_point, distance]
 
 
@@ -84,18 +84,18 @@ def basic_export(new_vertices, new_colors, output_filename):
 
 # To run for the whole folder
 
-ply_folder_path = r'D:\results\plys'
-export_folder_path = r'D:\results\plys\clipped'
-plys = os.listdir(ply_folder_path)
-
-for file in plys:
-    ply_file_path = os.path.join(ply_folder_path, file)
-    if os.path.isfile(ply_file_path):
-        export_file_path = os.path.join(export_folder_path, file)
-        print(ply_file_path)
-        print(export_file_path)
-        point_cloud_array, point_cloud_file = db_clusterization.open_ply_file(ply_file_path)
-        cam_points = extract_camera_points(point_cloud_file)
-        sphere_parameters = create_a_sphere(cam_points)
-        cropped_vertices, cropped_colors = crop_a_point_cloud(point_cloud_file, sphere_parameters)
-        basic_export(cropped_vertices, cropped_colors, export_file_path)
+# ply_folder_path = r'D:\results\plys\selected'
+# export_folder_path = r'D:\results\plys\selected\clipped'
+# plys = os.listdir(ply_folder_path)
+#
+# for file in plys:
+#     ply_file_path = os.path.join(ply_folder_path, file)
+#     if os.path.isfile(ply_file_path):
+#         export_file_path = os.path.join(export_folder_path, file)
+#         print(ply_file_path)
+#         print(export_file_path)
+#         point_cloud_array, point_cloud_file = db_clusterization.open_ply_file(ply_file_path)
+#         cam_points = extract_camera_points(point_cloud_file)
+#         sphere_parameters = create_a_sphere(cam_points)
+#         cropped_vertices, cropped_colors = crop_a_point_cloud(point_cloud_file, sphere_parameters)
+#         basic_export(cropped_vertices, cropped_colors, export_file_path)
