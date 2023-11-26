@@ -3,6 +3,7 @@ from sklearn.metrics import pairwise_distances
 import numpy as np
 import open3d as o3d
 import db_clusterization
+import os
 
 
 def extract_camera_points(point_cloud):
@@ -68,14 +69,33 @@ def basic_export(new_vertices, new_colors, output_filename):
     o3d.io.write_point_cloud(output_filename, cropped_point_cloud, write_ascii=True)
 
 
-ply_file_path = 'sfm.ply'
-exported_file_path = 'camera_sphere.ply'
-exported_point_cloud = 'cropped_point_cloud.ply'
+# ply_file_path = 'sfm.ply'
+# exported_file_path = 'camera_sphere.ply'
+# exported_point_cloud = 'cropped_point_cloud.ply'
+#
+# point_cloud_array, point_cloud_file = db_clusterization.open_ply_file(ply_file_path)
+# cam_points = extract_camera_points(point_cloud_file)
+# # export_camera_points(cam_points)
+# sphere_parameters = create_a_sphere(cam_points)
+# # print(sphere_parameters)
+# cropped_vertices, cropped_colors = crop_a_point_cloud(point_cloud_file, sphere_parameters)
+# basic_export(cropped_vertices, cropped_colors, exported_point_cloud)
 
-point_cloud_array, point_cloud_file = db_clusterization.open_ply_file(ply_file_path)
-cam_points = extract_camera_points(point_cloud_file)
-# export_camera_points(cam_points)
-sphere_parameters = create_a_sphere(cam_points)
-# print(sphere_parameters)
-cropped_vertices, cropped_colors = crop_a_point_cloud(point_cloud_file, sphere_parameters)
-basic_export(cropped_vertices, cropped_colors, exported_point_cloud)
+
+# To run for the whole folder
+
+ply_folder_path = r'D:\results\plys'
+export_folder_path = r'D:\results\plys\clipped'
+plys = os.listdir(ply_folder_path)
+
+for file in plys:
+    ply_file_path = os.path.join(ply_folder_path, file)
+    if os.path.isfile(ply_file_path):
+        export_file_path = os.path.join(export_folder_path, file)
+        print(ply_file_path)
+        print(export_file_path)
+        point_cloud_array, point_cloud_file = db_clusterization.open_ply_file(ply_file_path)
+        cam_points = extract_camera_points(point_cloud_file)
+        sphere_parameters = create_a_sphere(cam_points)
+        cropped_vertices, cropped_colors = crop_a_point_cloud(point_cloud_file, sphere_parameters)
+        basic_export(cropped_vertices, cropped_colors, export_file_path)
