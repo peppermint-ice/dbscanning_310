@@ -122,10 +122,10 @@ def calculate_alpha_shape_parameters(point_cloud, alpha_shape, total_volume):
 # total_volume = calculate_watertight_volume(alpha_shape)
 # calculate_alpha_shape_parameters(point_cloud_array, alpha_shape, total_volume)
 
-ply_folder_path = r'D:\results\plys\selected\clipped\clustered\color_filtered\green\rotated\corrected'
-alpha_folder_path = r'D:\results\plys\selected\clipped\clustered\color_filtered\green\rotated\alpha_shapes'
+ply_folder_path = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated\corrected'
+alpha_folder_path = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated\alpha_shapes'
 plys = os.listdir(ply_folder_path)
-csv_file_path = r'D:\results\plys\selected\clipped\clustered\color_filtered\green\rotated\alpha_shapes\df.csv'
+csv_file_path = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated\alpha_shapes\df.csv'
 df = pd.DataFrame()
 
 for file in plys:

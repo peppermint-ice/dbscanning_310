@@ -135,17 +135,17 @@ def transform_point_cloud(point_cloud, rotation_matrix, scale_factor):
 
 # To run for the whole folder
 
-circles_folder_path = r'D:\results\plys\selected\circles'
+circles_folder_path = r'D:\results\plys\circles'
 
-clipped_folder_path = r'D:\results\plys\selected\clipped'
-plant_folder_path = r'D:\results\plys\selected\clipped\color_filtered\green'
-clipped_clustered_folder_path = r'D:\results\plys\selected\clipped\clustered'
-clustered_plant_folder_path = r'D:\results\plys\selected\clipped\clustered\color_filtered\green'
+clipped_folder_path = r'D:\results\plys\clipped'
+plant_folder_path = r'D:\results\plys\clipped\color_filtered\green'
+clipped_clustered_folder_path = r'D:\results\plys\clipped\clustered'
+clustered_plant_folder_path = r'D:\results\plys\clipped\clustered\color_filtered\green'
 
-export_clipped_folder_path = r'D:\results\plys\selected\clipped\rotated'
-export_plant_folder_path = r'D:\results\plys\selected\clipped\color_filtered\green\rotated'
-export_clipped_clustered_folder_path = r'D:\results\plys\selected\clipped\clustered\rotated'
-export_clustered_plant_folder_path = r'D:\results\plys\selected\clipped\clustered\color_filtered\green\rotated'
+export_clipped_folder_path = r'D:\results\plys\clipped\rotated'
+export_plant_folder_path = r'D:\results\plys\clipped\color_filtered\green\rotated'
+export_clipped_clustered_folder_path = r'D:\results\plys\clipped\clustered\rotated'
+export_clustered_plant_folder_path = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated'
 
 
 plys = os.listdir(circles_folder_path)
