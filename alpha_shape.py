@@ -95,6 +95,12 @@ def calculate_alpha_shape_parameters(point_cloud, alpha_shape, total_volume):
     for i in mesh.split():
         components += 1
 
+    # # Get points inside the alpha shape
+    # points_inside = alpha_shape.select_by_index(np.arange(len(point_cloud)))
+
+    # Get the number of points inside the alpha shape
+    num_points_inside = len(point_cloud)
+    point_density = num_points_inside / total_volume
     # Store parameters for the entire alpha shape
     parameters = {
         'Height': dimensions[0],
@@ -107,7 +113,8 @@ def calculate_alpha_shape_parameters(point_cloud, alpha_shape, total_volume):
         'Flatness': flatness,
         'Sphericity': sphericity,
         'Compactness': compactness,
-        'Components_number': components
+        'Components_number': components,
+        'Point_density': point_density
     }
     print(parameters)
     return parameters
