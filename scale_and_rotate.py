@@ -113,103 +113,104 @@ def transform_point_cloud(point_cloud, rotation_matrix, scale_factor):
     return scaled_point_cloud, colors
 
 
-# circle_file_path = "circle.ply"
-# ply_file_path = "clustered.ply"
-# pot_file_path = "pot_clustered.ply"
-# plant_file_path = "color_filtered_green.ply"
+if __name__ == '__main__':
+    # circle_file_path = "circle.ply"
+    # ply_file_path = "clustered.ply"
+    # pot_file_path = "pot_clustered.ply"
+    # plant_file_path = "color_filtered_green.ply"
 
-# exported_ply_file_path = "rotated_clustered.ply"
-# exported_pot_file_path = "rotated_red.ply"
-# exported_plant_file_path = "rotated_green.ply"
+    # exported_ply_file_path = "rotated_clustered.ply"
+    # exported_pot_file_path = "rotated_red.ply"
+    # exported_plant_file_path = "rotated_green.ply"
 
-# circle_point_cloud_array, circle_point_cloud_file = db_clusterization.open_ply_file(circle_file_path)
-# ply_point_cloud_array, ply_point_cloud_file = db_clusterization.open_ply_file(ply_file_path)
-# pot_point_cloud_array, pot_point_cloud_file = db_clusterization.open_ply_file(pot_file_path)
-# plant_point_cloud_array, plant_point_cloud_file = db_clusterization.open_ply_file(plant_file_path)
-#
-#
-# rotation_matrix, scale_factor = calculate_rotation_and_scaling(circle_point_cloud_file)
-# transformed_point_cloud, transformed_colors = transform_point_cloud(ply_point_cloud_file, rotation_matrix, scale_factor)
-# get_camera_info.basic_export(transformed_point_cloud, transformed_colors, exported_ply_file_path)
-
-
-# To run for the whole folder
-
-circles_folder_path = r'D:\results\plys\circles'
-
-clipped_folder_path = r'D:\results\plys\clipped'
-plant_folder_path = r'D:\results\plys\clipped\color_filtered\green'
-clipped_clustered_folder_path = r'D:\results\plys\clipped\clustered'
-clustered_plant_folder_path = r'D:\results\plys\clipped\clustered\color_filtered\green'
-
-export_clipped_folder_path = r'D:\results\plys\clipped\rotated'
-export_plant_folder_path = r'D:\results\plys\clipped\color_filtered\green\rotated'
-export_clipped_clustered_folder_path = r'D:\results\plys\clipped\clustered\rotated'
-export_clustered_plant_folder_path = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated'
+    # circle_point_cloud_array, circle_point_cloud_file = db_clusterization.open_ply_file(circle_file_path)
+    # ply_point_cloud_array, ply_point_cloud_file = db_clusterization.open_ply_file(ply_file_path)
+    # pot_point_cloud_array, pot_point_cloud_file = db_clusterization.open_ply_file(pot_file_path)
+    # plant_point_cloud_array, plant_point_cloud_file = db_clusterization.open_ply_file(plant_file_path)
+    #
+    #
+    # rotation_matrix, scale_factor = calculate_rotation_and_scaling(circle_point_cloud_file)
+    # transformed_point_cloud, transformed_colors = transform_point_cloud(ply_point_cloud_file, rotation_matrix, scale_factor)
+    # get_camera_info.basic_export(transformed_point_cloud, transformed_colors, exported_ply_file_path)
 
 
-plys = os.listdir(circles_folder_path)
-for file in plys:
-    circle_file_path = os.path.join(circles_folder_path, file)
-    if os.path.isfile(circle_file_path):
+    # To run for the whole folder
 
-        clipped_file_path = os.path.join(clipped_folder_path, file)
-        plant_file_path = os.path.join(plant_folder_path, file)
-        clipped_clustered_file_path = os.path.join(clipped_clustered_folder_path, file)
-        clustered_plant_file_path = os.path.join(clustered_plant_folder_path, file)
+    circles_folder_path = r'D:\results\plys\circles'
 
-        export_clipped_file_path = os.path.join(export_clipped_folder_path, file)
-        export_plant_file_path = os.path.join(export_plant_folder_path, file)
-        export_clipped_clustered_file_path = os.path.join(export_clipped_clustered_folder_path, file)
-        export_clustered_plant_file_path = os.path.join(export_clustered_plant_folder_path, file)
+    clipped_folder_path = r'D:\results\plys\clipped'
+    plant_folder_path = r'D:\results\plys\clipped\color_filtered\green'
+    clipped_clustered_folder_path = r'D:\results\plys\clipped\clustered'
+    clustered_plant_folder_path = r'D:\results\plys\clipped\clustered\color_filtered\green'
 
-        print("Circle: ", circle_file_path)
+    export_clipped_folder_path = r'D:\results\plys\clipped\rotated'
+    export_plant_folder_path = r'D:\results\plys\clipped\color_filtered\green\rotated'
+    export_clipped_clustered_folder_path = r'D:\results\plys\clipped\clustered\rotated'
+    export_clustered_plant_folder_path = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated'
 
-        print("Clipped: from")
-        print(clipped_file_path)
 
-        print("to:")
-        print(export_clipped_file_path)
-        print("Plant: from")
-        print(plant_file_path)
+    plys = os.listdir(circles_folder_path)
+    for file in plys:
+        circle_file_path = os.path.join(circles_folder_path, file)
+        if os.path.isfile(circle_file_path):
 
-        print("to:")
-        print(export_plant_file_path)
-        print("Clipped_clustered: from")
-        print(clipped_clustered_file_path)
+            clipped_file_path = os.path.join(clipped_folder_path, file)
+            plant_file_path = os.path.join(plant_folder_path, file)
+            clipped_clustered_file_path = os.path.join(clipped_clustered_folder_path, file)
+            clustered_plant_file_path = os.path.join(clustered_plant_folder_path, file)
 
-        print("to:")
-        print(export_clipped_clustered_file_path)
-        print("Clustered_plant: from")
-        print(clustered_plant_file_path)
+            export_clipped_file_path = os.path.join(export_clipped_folder_path, file)
+            export_plant_file_path = os.path.join(export_plant_folder_path, file)
+            export_clipped_clustered_file_path = os.path.join(export_clipped_clustered_folder_path, file)
+            export_clustered_plant_file_path = os.path.join(export_clustered_plant_folder_path, file)
 
-        print("to:")
-        print(export_clustered_plant_file_path)
+            print("Circle: ", circle_file_path)
 
-        circle_point_cloud_array, circle_point_cloud_file = db_clusterization.open_ply_file(circle_file_path)
-        clipped_point_cloud_array, clipped_point_cloud_file = db_clusterization.open_ply_file(clipped_file_path)
-        plant_point_cloud_array, plant_point_cloud_file = db_clusterization.open_ply_file(plant_file_path)
-        clipped_clustered_point_cloud_array, clipped_clustered_point_cloud_file = db_clusterization.open_ply_file(
-            clipped_clustered_file_path)
-        clustered_plant_point_cloud_array, clustered_plant_point_cloud_file = db_clusterization.open_ply_file(
-            clustered_plant_file_path)
+            print("Clipped: from")
+            print(clipped_file_path)
 
-        rotation_matrix, scale_factor = calculate_rotation_and_scaling(circle_point_cloud_file)
+            print("to:")
+            print(export_clipped_file_path)
+            print("Plant: from")
+            print(plant_file_path)
 
-        transformed_clipped_point_cloud, transformed_clipped_colors = transform_point_cloud(
-            clipped_point_cloud_file, rotation_matrix, scale_factor)
-        transformed_plant_point_cloud, transformed_plant_colors = transform_point_cloud(
-            plant_point_cloud_file, rotation_matrix, scale_factor)
-        transformed_clipped_clustered_point_cloud, transformed_clipped_clustered_colors = transform_point_cloud(
-            clipped_clustered_point_cloud_file, rotation_matrix, scale_factor)
-        transformed_clustered_plant_point_cloud, transformed_clustered_plant_colors = transform_point_cloud(
-            clustered_plant_point_cloud_file, rotation_matrix, scale_factor)
+            print("to:")
+            print(export_plant_file_path)
+            print("Clipped_clustered: from")
+            print(clipped_clustered_file_path)
 
-        get_camera_info.basic_export(transformed_clipped_point_cloud, transformed_clipped_colors,
-                                     export_clipped_file_path)
-        get_camera_info.basic_export(transformed_plant_point_cloud, transformed_plant_colors,
-                                     export_plant_file_path)
-        get_camera_info.basic_export(transformed_clipped_clustered_point_cloud, transformed_clipped_clustered_colors,
-                                     export_clipped_clustered_file_path)
-        get_camera_info.basic_export(transformed_clustered_plant_point_cloud, transformed_clustered_plant_colors,
-                                     export_clustered_plant_file_path)
+            print("to:")
+            print(export_clipped_clustered_file_path)
+            print("Clustered_plant: from")
+            print(clustered_plant_file_path)
+
+            print("to:")
+            print(export_clustered_plant_file_path)
+
+            circle_point_cloud_array, circle_point_cloud_file = db_clusterization.open_ply_file(circle_file_path)
+            clipped_point_cloud_array, clipped_point_cloud_file = db_clusterization.open_ply_file(clipped_file_path)
+            plant_point_cloud_array, plant_point_cloud_file = db_clusterization.open_ply_file(plant_file_path)
+            clipped_clustered_point_cloud_array, clipped_clustered_point_cloud_file = db_clusterization.open_ply_file(
+                clipped_clustered_file_path)
+            clustered_plant_point_cloud_array, clustered_plant_point_cloud_file = db_clusterization.open_ply_file(
+                clustered_plant_file_path)
+
+            rotation_matrix, scale_factor = calculate_rotation_and_scaling(circle_point_cloud_file)
+
+            transformed_clipped_point_cloud, transformed_clipped_colors = transform_point_cloud(
+                clipped_point_cloud_file, rotation_matrix, scale_factor)
+            transformed_plant_point_cloud, transformed_plant_colors = transform_point_cloud(
+                plant_point_cloud_file, rotation_matrix, scale_factor)
+            transformed_clipped_clustered_point_cloud, transformed_clipped_clustered_colors = transform_point_cloud(
+                clipped_clustered_point_cloud_file, rotation_matrix, scale_factor)
+            transformed_clustered_plant_point_cloud, transformed_clustered_plant_colors = transform_point_cloud(
+                clustered_plant_point_cloud_file, rotation_matrix, scale_factor)
+
+            get_camera_info.basic_export(transformed_clipped_point_cloud, transformed_clipped_colors,
+                                         export_clipped_file_path)
+            get_camera_info.basic_export(transformed_plant_point_cloud, transformed_plant_colors,
+                                         export_plant_file_path)
+            get_camera_info.basic_export(transformed_clipped_clustered_point_cloud, transformed_clipped_clustered_colors,
+                                         export_clipped_clustered_file_path)
+            get_camera_info.basic_export(transformed_clustered_plant_point_cloud, transformed_clustered_plant_colors,
+                                         export_clustered_plant_file_path)
