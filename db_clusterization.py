@@ -60,7 +60,7 @@ def count_all_cluster_sizes(cluster_labels, unique_label_names):
 
 
 def plot_clusters_3d(point_cloud_data, cluster_labels):
-    """ This function provides a matplotlig 3d plot with a clustered point cloud"""
+    """ This function provides a matplotlib 3d plot with a clustered point cloud"""
 
     # Assuming 'point_cloud_data' contains your 3D point cloud data as a NumPy array
     # Assuming 'cluster_labels' contains the cluster labels assigned by DBSCAN

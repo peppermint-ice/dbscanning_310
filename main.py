@@ -40,8 +40,8 @@ import get_camera_info
 
 # To run it so that every point cloud gets the biggest cluster over 30000 points
 
-ply_folder_path = r'D:\results\plys\selected\clipped'
-export_folder_path = r'D:\results\plys\selected\clipped\clustered'
+ply_folder_path = r'D:\results\plys\clipped'
+export_folder_path = r'D:\results\plys\clipped\clustered'
 plys = os.listdir(ply_folder_path)
 eps_list = []
 min_samples_list = []
@@ -51,7 +51,7 @@ for file in plys:
     eps = 0.09  # setting starting eps and min samples
     min_samples = 70
     ply_file_path = os.path.join(ply_folder_path, file)
-    if os.path.isfile(ply_file_path):   # i might have some folders in the dir :)
+    if os.path.isfile(ply_file_path) and file != 'complete_la_data.csv':   # i might have some folders in the dir :)
         export_file_path = os.path.join(export_folder_path, file)
         print("Original path: ", ply_file_path)
         print("Clustered path: ", export_file_path)
@@ -74,3 +74,5 @@ for file in plys:
 # print out the stats
 stats = pd.DataFrame({"Epsilons": eps_list, "File Name": file_names_list})
 print(stats.to_string())
+
+print('lol')

@@ -23,7 +23,8 @@ def fit_and_plot_model(x, y, model_name, output_folder):
         X = sm.add_constant(np.column_stack((np.log(x), x)))
     # Exponential regression
     elif model_name == 'exponential':
-        X = sm.add_constant(np.column_stack((np.exp(x), x)))
+        x_normalized = (x - np.min(x)) / (np.max(x) - np.min(x))
+        X = sm.add_constant(np.column_stack((np.exp(x_normalized), x_normalized)))
     else:
         raise ValueError("Invalid model_name")
 
@@ -33,10 +34,16 @@ def fit_and_plot_model(x, y, model_name, output_folder):
     print('R2: ', model.rsquared)
 
     # Plotting the results
-    plt.scatter(x, y, label='Data')
+    if model_name == 'exponential':
+        plt.scatter(x_normalized, y, label='Data')
+    else:
+        plt.scatter(x, y, label='Data')
 
     # Generate x values for prediction
-    x_fit = np.linspace(min(x), max(x), 100)
+    if model_name == 'exponential':
+        x_fit = np.linspace(min(x_normalized), max(x_normalized), 100)
+    else:
+        x_fit = np.linspace(min(x), max(x), 100)
 
     # Prepare X_fit based on the model type
     if model_name == 'linear':
@@ -54,9 +61,9 @@ def fit_and_plot_model(x, y, model_name, output_folder):
 
     plt.plot(x_fit, y_fit, label=f'{model_name.capitalize()} Model', linestyle='--')
     plt.title(f'{model_name.capitalize()} Model\nR-squared: {r_squared:.4f}')
-    plt.xlabel(x.name)
-    plt.ylabel(y.name)
-    plt.legend()
+    plt.xlabel(x.name.replace('_', ' '))
+    plt.ylabel(y.name.replace('_', ' '))
+    # plt.legend()
 
     # Save the figure
     filename = f"{x.name}_{model_name}.png"
@@ -79,6 +86,8 @@ print(df.to_string())
 Y = df['Measured_leaf_area']
 X = df.drop(columns=['File_name', 'Measured_leaf_area'], inplace=False)
 X['Components_number'] = X['Components_number'].astype(float)
+X['Rectangular_area'] = X['Length'] * X['Width']
+X['Sum_of_dimensions'] = X['Length'] + X['Width']
 X['Flatness'] = X['Flatness'].abs()
 print(X.to_string())
 column_names = []
@@ -90,7 +99,7 @@ model_names_list = []
 df2 = pd.DataFrame(columns=column_names)
 
 
-for model_type in ['linear', 'quadratic', 'cubic', 'logarithmic']:
+for model_type in ['linear', 'quadratic', 'cubic', 'logarithmic', 'exponential']:
     row = {}
     for parameter in X.columns:
         print(model_type, parameter)
@@ -104,7 +113,8 @@ print(df2.to_string())
 df2.to_csv(csv2_file_path, index=False)
 
 X = df[['Height', 'Length', 'Width', 'Volume', 'Surface_area', 'Aspect_ratio', 'Elongation', 'Flatness', 'Sphericity', 'Compactness', 'Components_number']]
-X = df[['Surface_area', 'Volume', 'Components_number']]
+X['Rectangular_area'] = X['Length'] * X['Width']
+X = X[['Surface_area', 'Volume', 'Components_number', 'Height']]
 
 # check linear regression
 # Add a constant term to the model
@@ -114,14 +124,14 @@ model = sm.OLS(Y, X).fit()
 # Print the model summary
 print(model.summary())
 
-#check quadratic regression
-X = df[['Height', 'Length', 'Width', 'Volume', 'Surface_area', 'Aspect_ratio', 'Elongation', 'Flatness', 'Sphericity', 'Compactness', 'Components_number']]
-X = df[['Surface_area', 'Volume', 'Components_number']]
-X = sm.add_constant(np.column_stack((X, X**2)))
-# Fit the quadratic regression model
-model = sm.OLS(Y, X).fit()
-# Print the quadratic model summary
-print(model.summary())
+# #check quadratic regression
+# X = df[['Height', 'Length', 'Width', 'Volume', 'Surface_area', 'Aspect_ratio', 'Elongation', 'Flatness', 'Sphericity', 'Compactness', 'Components_number']]
+# X = df[['Surface_area', 'Volume', 'Components_number']]
+# X = sm.add_constant(np.column_stack((X, X**2)))
+# # Fit the quadratic regression model
+# model = sm.OLS(Y, X).fit()
+# # Print the quadratic model summary
+# print(model.summary())
 
 # Plotting the parameters
 # for column in df.columns:
@@ -133,7 +143,7 @@ print(model.summary())
 # Plotting the R2s
 rsquared_df = pd.read_csv(csv2_file_path)
 
-rsquared_df.index = ['linear', 'quadratic', 'cubic', 'logarithmic']
+rsquared_df.index = ['linear', 'quadratic', 'cubic', 'logarithmic', 'exponential']
 
 # Set the color map for each model type
 cmap = get_cmap('viridis', len(rsquared_df.index))
@@ -151,14 +161,14 @@ for i, model in enumerate(models):
 # Set labels and title
 plt.ylabel('R2')
 plt.title('R2 for Different Models')
-plt.xticks(bar_positions + bar_width * (len(models) / 2), rsquared_df.columns, rotation=45, ha='right')  # Adjust x-axis labels
+plt.xticks(bar_positions + bar_width * (len(models) / 2), rsquared_df.columns.str.replace('_', ' '), rotation=45, ha='right')  # Adjust x-axis labels
 
 # Add legend
 plt.legend()
 
 plt.tight_layout()
-plt.savefig(os.path.join(output_folder, 'total.png'), transparent=True)
+plt.savefig(os.path.join(output_folder, 'total.png', dpi=300), transparent=True)
 # Show the plot
-plt.show()
+# plt.show()
 
 

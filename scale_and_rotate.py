@@ -38,6 +38,9 @@ def fit_plane_least_squares(points):
 
 
 def calculate_rotation_and_scaling(circle_point_cloud):
+
+
+
     # Convert input to NumPy arrays
     points = np.array(circle_point_cloud.points)
 
