@@ -138,8 +138,8 @@ def create_a_sphere(camera_points):
     central_point = np.mean(camera_points, axis=0)
     distances = pairwise_distances(camera_points, [central_point])
     # print(distances)
-    distance_95 = np.percentile(distances, 95)
-    distance = distance_95 * 1.0
+    distance_99 = np.percentile(distances, 99)
+    distance = distance_99 * 1.0
     return [central_point, distance]
 
 
@@ -149,7 +149,7 @@ def create_a_cube(camera_points):
     max_coords = np.max(camera_points, axis=0)
 
     # Calculate the side length of the cube
-    factor = 0.6
+    factor = 0.99
     side_length = max(max_coords - min_coords) * factor
 
     # Calculate the central point of the cube
@@ -338,11 +338,13 @@ def red_index(point_cloud_data_file):
     return filtered_points, filtered_colors
 
 
-def create_alpha_shape(point_cloud_data_file, alpha, output_file_path=None):
+def create_alpha_shape(point_cloud_file_path, alpha, output_file_path=None):
+    # Load point cloud from .ply file
+    point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
+
     # Compute alpha shape
     alpha_shape = o3d.geometry.TriangleMesh.create_from_point_cloud_alpha_shape(
-        point_cloud_data_file,
-        alpha=alpha
+        point_cloud, alpha=alpha
     )
     # It allows to avoid saving a .ply with an alpha shape in case you don't need it
     if output_file_path is not None:
@@ -500,3 +502,180 @@ if __name__ == '__main__':
     # parameters = calculate_shape_parameters(scaled_pcl, poisson_shape, total_volume)
     # print('Poisson')
     # print(parameters)
+
+    # Set the runtype parameter
+    runtype_options = [
+        'whole',                # All files up to scaling not included
+        'one_file',             # Same procedure for one file
+        'red_from_clipped',     # Get red_from_clipped from clipped/cubes folder
+        'scale',                # Run procedure of scaling using circles
+        'create_alpha',         # Create alpha shapes and the csv based on corrected folder, get stats
+    ]
+    runtype = 'create_alpha'
+
+    if runtype == 'whole':
+        # The whole procedure
+
+        # Set import path
+        ply_folder_path = r'D:\results\plys'
+
+        # Set export folders
+        clipped_export_folder_path = r'D:\results\plys\clipped\cubes'
+        red_from_clipped_export_folder_path = r'D:\results\plys\clipped\cubes\red_from_clipped'
+        clipped_clustered_export_folder_path = r'D:\results\plys\clipped\cubes\clustered'
+        clipped_clustered_green_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green'
+        clipped_clustered_red_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\red'
+
+        plys = os.listdir(ply_folder_path)
+        for file in plys:
+            ply_file_path = os.path.join(ply_folder_path, file)
+            if os.path.isfile(ply_file_path) and file != "complete_la_data.csv" and file != "set1_la_final.csv":
+                # Set export paths
+                clipped_export_file_path = os.path.join(clipped_export_folder_path, file)
+                red_from_clipped_export_file_path = os.path.join(red_from_clipped_export_folder_path, file)
+                clipped_clustered_export_file_path = os.path.join(clipped_clustered_export_folder_path, file)
+                clipped_clustered_green_export_file_path = os.path.join(clipped_clustered_green_export_folder_path, file)
+                clipped_clustered_red_export_file_path = os.path.join(clipped_clustered_red_export_folder_path, file)
+                print(ply_file_path)
+                print(clipped_export_file_path)
+                print(clipped_clustered_export_file_path)
+                print(clipped_clustered_green_export_file_path)
+                print(clipped_clustered_red_export_file_path)
+
+                # Open a file
+                pcl = open_ply_file(ply_file_path)
+
+                # Cropping
+                vertices, colors = extract_camera_points(pcl)
+                cube = create_a_cube(vertices)
+                vertices, colors = crop_a_point_cloud(pcl, cube, 'cube')
+                cropped_pcl = export_ply_file(vertices, colors, clipped_export_file_path)
+
+                # Clustering
+                vertices, colors, assigned_clusters, df = create_clusters(cropped_pcl)
+                clustered_pcl = export_ply_file(vertices, colors, clipped_clustered_export_file_path)
+
+                # Color filtering
+                vertices, colors = green_index(clustered_pcl)
+                green_pcl = export_ply_file(vertices, colors, clipped_clustered_green_export_file_path)
+                vertices, colors = red_index(clustered_pcl)
+                red_pcl = export_ply_file(vertices, colors, clipped_clustered_red_export_file_path)
+
+                # Red from clipped
+                vertices, colors = red_index(cropped_pcl)
+                red_pcl = export_ply_file(vertices, colors, red_from_clipped_export_file_path)
+
+    elif runtype == 'one_file':
+        file = r'240124_53_1_867p58.ply'
+        ply_folder_path = r'D:\results\plys'
+
+        clipped_export_folder_path = r'D:\results\plys\clipped\cubes'
+        red_from_clipped_export_folder_path = r'D:\results\plys\clipped\cubes\red_from_clipped'
+        clipped_clustered_export_folder_path = r'D:\results\plys\clipped\cubes\clustered'
+        clipped_clustered_green_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green'
+        clipped_clustered_red_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\red'
+        clipped_export_file_path = os.path.join(clipped_export_folder_path, file)
+        red_from_clipped_export_file_path = os.path.join(red_from_clipped_export_folder_path, file)
+        clipped_clustered_export_file_path = os.path.join(clipped_clustered_export_folder_path, file)
+        clipped_clustered_green_export_file_path = os.path.join(clipped_clustered_green_export_folder_path, file)
+        clipped_clustered_red_export_file_path = os.path.join(clipped_clustered_red_export_folder_path, file)
+
+        ply_file_path = os.path.join(clipped_export_folder_path, file)
+        # Open a file
+        pcl = open_ply_file(ply_file_path)
+        #
+        # # Cropping
+        # vertices, colors = extract_camera_points(pcl)
+        # cube = create_a_cube(vertices)
+        # vertices, colors = crop_a_point_cloud(pcl, cube, 'cube')
+        # cropped_pcl = export_ply_file(vertices, colors, clipped_export_file_path)
+
+        cropped_pcl = pcl
+
+        # Clustering
+        vertices, colors, assigned_clusters, df = create_clusters(cropped_pcl)
+        clustered_pcl = export_ply_file(vertices, colors, clipped_clustered_export_file_path)
+
+        # Color filtering
+        vertices, colors = green_index(clustered_pcl)
+        green_pcl = export_ply_file(vertices, colors, clipped_clustered_green_export_file_path)
+        vertices, colors = red_index(clustered_pcl)
+        red_pcl = export_ply_file(vertices, colors, clipped_clustered_red_export_file_path)
+
+        # Red from clipped
+        vertices, colors = red_index(cropped_pcl)
+        red_pcl = export_ply_file(vertices, colors, red_from_clipped_export_file_path)
+
+    elif runtype == 'red_from_clipped':
+        # Set import path
+        clipped_folder_path = r'D:\results\plys\clipped\cubes'
+
+        # Set export folders
+        red_from_clipped_export_folder_path = r'D:\results\plys\clipped\cubes\red_from_clipped'
+
+        plys = os.listdir(clipped_folder_path)
+        for file in plys:
+            ply_file_path = os.path.join(clipped_folder_path, file)
+            if os.path.isfile(ply_file_path) and file != "complete_la_data.csv" and file != "set1_la_final.csv":
+                # Set export paths
+                red_from_clipped_export_file_path = os.path.join(red_from_clipped_export_folder_path, file)
+
+                print(ply_file_path)
+                print(red_from_clipped_export_file_path)
+
+                # Open a file
+                pcl = open_ply_file(ply_file_path)
+                cropped_pcl = pcl
+
+                # Color filtering
+                vertices, colors = red_index(cropped_pcl)
+                red_pcl = export_ply_file(vertices, colors, red_from_clipped_export_file_path)
+
+    elif runtype == 'scale':
+        circles_folder_path = r'D:\results\plys\circles'
+        green_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green'
+        rotated_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green\rotated'
+        plys = os.listdir(circles_folder_path)
+        for file in plys:
+            ply_file_path = os.path.join(circles_folder_path, file)
+            green_ply_file_path = os.path.join(green_folder_path, file)
+            rotated_export_file_path = os.path.join(rotated_export_folder_path, file)
+            if os.path.isfile(ply_file_path) and file != "complete_la_data.csv" and file != "set1_la_final.csv":
+                print(ply_file_path)
+                print(rotated_export_file_path)
+                print(green_ply_file_path)
+
+                pcl = open_ply_file(ply_file_path)
+                circle_pcl = pcl
+                green_pcl = open_ply_file(green_ply_file_path)
+
+                scaling_parameters = calculate_rotation_and_scaling(circle_pcl)
+                vertices, colors = transform_point_cloud(green_pcl, scaling_parameters)
+                export_ply_file(vertices, colors, output_filepath=rotated_export_file_path)
+
+    elif runtype == 'create_alpha':
+        ply_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green\rotated\corrected'
+        alpha_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green\rotated\alpha_shapes'
+        csv_file_path = r'D:\results\plys\clipped\clustered\cubes\color_filtered\green\rotated\alpha_shapes\alpha_shapes1203.csv'
+
+        plys = os.listdir(ply_folder_path)
+        df = pd.DataFrame()
+
+        for file in plys:
+            ply_file_path = os.path.join(ply_folder_path, file)
+            if os.path.isfile(ply_file_path):
+                alpha_file_path = os.path.join(alpha_folder_path, file)
+                print(ply_file_path)
+                print(alpha_file_path)
+                pcl = open_ply_file(ply_file_path)
+                alpha_value = 0.5  # Adjust alpha as needed
+                alpha_shape = create_alpha_shape(ply_file_path, alpha_file_path, alpha_value)
+                total_volume = calculate_watertight_volume(alpha_shape)
+                parameters = calculate_shape_parameters(pcl, alpha_shape, total_volume)
+                parameters['File_name'] = file
+                match = re.search(r'(\d+p\d+\.)', file)
+                parameters['Measured_leaf_area'] = float(match.group().replace('p', '.')[:-1])
+                df = pd.concat([df, pd.DataFrame([parameters])], ignore_index=True)
+        print(df.to_string())
+        df.to_csv(csv_file_path, index=False)
+
