@@ -1,10 +1,7 @@
 import numpy as np
 import db_clusterization
 import get_camera_info
-from skimage.measure import ransac
-from skimage.draw import disk
 from scipy.spatial.transform import Rotation
-import open3d as o3d
 import os
 from scipy.optimize import minimize
 

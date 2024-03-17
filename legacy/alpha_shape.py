@@ -1,8 +1,6 @@
 import numpy as np
 import pandas as pd
-from scipy.spatial import ConvexHull
 import db_clusterization
-import get_camera_info
 import open3d as o3d
 import trimesh
 import os

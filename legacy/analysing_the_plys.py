@@ -1,8 +1,6 @@
 import pandas as pd
 import db_clusterization
 import os
-from matplotlib import pyplot as plt
-import random
 
 # Here, I'm trying to find optimal clustering results (number of clusters, sizes of the biggest clusters) for the plants
 # I want to have a plant recognized as 1 or more clusters together with the pot. I also want to be able to identify

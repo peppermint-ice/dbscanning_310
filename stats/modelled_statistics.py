@@ -114,7 +114,7 @@ def plot_histograms(df, output_folder, parameters, plot_individual=True):
 
 
 if __name__ == '__main__':
-    # Specify paths to dfs
+    # Specify config to dfs
     leaf_area_csv_path = r'D:\results\plys\complete_la_data.csv'
     la_df = pd.read_csv(leaf_area_csv_path)
 

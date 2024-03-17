@@ -1,0 +1,14 @@
+{
+    "gdrive": {
+        "plys": "G:/My Drive/Dmitrii - Ph.D Thesis/Frost room Experiment Data/LA/plys"
+    },
+    "lab_pc": {
+        "plys": "D:/results/plys"
+    },
+    "home_onedrive": {
+        "plys": "C:/Users/dusen/OneDrive - huji.ac.il/Dmitrii - Ph.D Thesis/Frost room experiment data/LA/plys"
+    },
+    "home": {
+        "plys": "C:/Users/dusen/OneDrive/Documents/PhD/studies/temp/plys"
+    }
+}

@@ -1,5 +1,4 @@
 """ This file contains functions regarding working with colors"""
-from sklearn.metrics import pairwise_distances
 import numpy as np
 import db_clusterization
 import get_camera_info

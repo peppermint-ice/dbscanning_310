@@ -75,7 +75,7 @@ def print_hists(df, plot_folder):
 
 
 if __name__ == "__main__":
-    # Create all paths
+    # Create all config
     ply_folder_path = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated\alpha_shapes'
     output_folder = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated\alpha_shapes\plots\raw_data'
     csv_file_name = 'complete_la_data.csv'

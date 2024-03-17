@@ -7,6 +7,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics import pairwise_distances
 from scipy.spatial.transform import Rotation
 from scipy.optimize import minimize
+from config import paths
 
 import os
 import re
@@ -341,7 +342,8 @@ def red_index(point_cloud_data_file):
 def create_alpha_shape(point_cloud_file_path, alpha, output_file_path=None):
     # Load point cloud from .ply file
     point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
-
+    # Estimate normals
+    point_cloud.estimate_normals()
     # Compute alpha shape
     alpha_shape = o3d.geometry.TriangleMesh.create_from_point_cloud_alpha_shape(
         point_cloud, alpha=alpha
@@ -353,18 +355,20 @@ def create_alpha_shape(point_cloud_file_path, alpha, output_file_path=None):
     return alpha_shape
 
 
-def create_poisson_shape(point_cloud_data_file, depth, output_file_path=None):
+def create_poisson_shape(point_cloud_file_path, depth, output_file_path=None):
+    # Load point cloud from .ply file
+    point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
     # Estimate normals
-    point_cloud_data_file.estimate_normals()
+    point_cloud.estimate_normals()
     # Compute Poisson shape
     poisson_shape, densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(
-        point_cloud_data_file,
+        point_cloud,
         depth=depth
     )
 
     # It allows to avoid saving a .ply with an alpha shape in case you don't need it
     if output_file_path:
-        # Save alpha shape to a .ply file
+        # Save Poisson shape to a .ply file
         o3d.io.write_triangle_mesh(output_file_path, poisson_shape)
 
     # ChatGPT tells me that I can make sure everuthing is watertight right away. I haven't cheked it yet. If it's not working, I can use the calculate_watertight_volume function.
@@ -374,6 +378,27 @@ def create_poisson_shape(point_cloud_data_file, depth, output_file_path=None):
     poisson_shape.remove_unreferenced_vertices()
 
     return poisson_shape
+
+
+def create_ball_pivoting_shape(point_cloud_file_path, radii, output_file_path=None):
+    # Load point cloud from .ply file
+    point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
+    # Estimate normals
+    point_cloud.estimate_normals()
+    # Compute Ball pivoting shape
+    ball_pivoting_shape = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(point_cloud, radii)
+
+    # It allows to avoid saving a .ply with an alpha shape in case you don't need it
+    if output_file_path:
+        # Save Ball pivoting shape to a .ply file
+        o3d.io.write_triangle_mesh(output_file_path, ball_pivoting_shape)
+
+    # Ensure mesh is watertight
+    ball_pivoting_shape.compute_vertex_normals()
+    ball_pivoting_shape.remove_degenerate_triangles()
+    ball_pivoting_shape.remove_unreferenced_vertices()
+
+    return ball_pivoting_shape
 
 
 def calculate_watertight_volume(shape):
@@ -454,54 +479,7 @@ def calculate_shape_parameters(point_cloud_data_file, shape, total_volume):
 
 
 if __name__ == '__main__':
-    # Open files
-    # pcl = open_ply_file('sfm.ply')
-    # circle_pcl = open_ply_file('circle.ply')
-    #
-    # # Cropping
-    # vertices, colors = extract_camera_points(pcl)
-    # cube = create_a_cube(vertices)
-    # vertices, colors = crop_a_point_cloud(pcl, cube, 'sphere')
-    # cropped_pcl = export_ply_file(vertices, colors)
-    #
-    # # Clustering
-    # vertices, colors, assigned_clusters, df = create_clusters(cropped_pcl)
-    # clustered_pcl = export_ply_file(vertices, colors)
-    #
-    # # Color filtering
-    # vertices, colors = green_index(clustered_pcl)
-    # green_pcl = export_ply_file(vertices, colors)
-    # vertices, colors = red_index(clustered_pcl)
-    # red_pcl = export_ply_file(vertices, colors)
-    #
-    # # Scaling
-    # scaling_parameters = calculate_rotation_and_scaling(circle_pcl)
-    # vertices, colors = transform_point_cloud(green_pcl, scaling_parameters)
-    # scaled_pcl = export_ply_file(vertices, colors)
-
-    # For testing, I'm slightly modifying the file, so we're leaving it as is
-
-    # scaled_pcl = open_ply_file('testing_scaled.ply')
-    #
-    # # Creating shapes
-    # # Alpha
-    # alpha = 0.5
-    # alpha_shape = create_alpha_shape(scaled_pcl, alpha)
-    #
-    # # Poisson
-    # depth = 12
-    # poisson_shape = create_poisson_shape(scaled_pcl, depth)
-    #
-    #
-    # # Calculating parameters
-    # total_volume = calculate_watertight_volume(alpha_shape)
-    # parameters = calculate_shape_parameters(scaled_pcl, alpha_shape, total_volume)
-    # print('Alpha')
-    # print(parameters)
-    # total_volume = calculate_watertight_volume(poisson_shape)
-    # parameters = calculate_shape_parameters(scaled_pcl, poisson_shape, total_volume)
-    # print('Poisson')
-    # print(parameters)
+    folders_paths = paths.get_paths()
 
     # Set the runtype parameter
     runtype_options = [
@@ -511,100 +489,11 @@ if __name__ == '__main__':
         'scale',                # Run procedure of scaling using circles
         'create_alpha',         # Create alpha shapes and the csv based on corrected folder, get stats
     ]
-    runtype = 'create_alpha'
+    runtype = 'test'
 
-    if runtype == 'whole':
-        # The whole procedure
-
-        # Set import path
-        ply_folder_path = r'D:\results\plys'
-
-        # Set export folders
-        clipped_export_folder_path = r'D:\results\plys\clipped\cubes'
-        red_from_clipped_export_folder_path = r'D:\results\plys\clipped\cubes\red_from_clipped'
-        clipped_clustered_export_folder_path = r'D:\results\plys\clipped\cubes\clustered'
-        clipped_clustered_green_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green'
-        clipped_clustered_red_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\red'
-
-        plys = os.listdir(ply_folder_path)
-        for file in plys:
-            ply_file_path = os.path.join(ply_folder_path, file)
-            if os.path.isfile(ply_file_path) and file != "complete_la_data.csv" and file != "set1_la_final.csv":
-                # Set export paths
-                clipped_export_file_path = os.path.join(clipped_export_folder_path, file)
-                red_from_clipped_export_file_path = os.path.join(red_from_clipped_export_folder_path, file)
-                clipped_clustered_export_file_path = os.path.join(clipped_clustered_export_folder_path, file)
-                clipped_clustered_green_export_file_path = os.path.join(clipped_clustered_green_export_folder_path, file)
-                clipped_clustered_red_export_file_path = os.path.join(clipped_clustered_red_export_folder_path, file)
-                print(ply_file_path)
-                print(clipped_export_file_path)
-                print(clipped_clustered_export_file_path)
-                print(clipped_clustered_green_export_file_path)
-                print(clipped_clustered_red_export_file_path)
-
-                # Open a file
-                pcl = open_ply_file(ply_file_path)
-
-                # Cropping
-                vertices, colors = extract_camera_points(pcl)
-                cube = create_a_cube(vertices)
-                vertices, colors = crop_a_point_cloud(pcl, cube, 'cube')
-                cropped_pcl = export_ply_file(vertices, colors, clipped_export_file_path)
-
-                # Clustering
-                vertices, colors, assigned_clusters, df = create_clusters(cropped_pcl)
-                clustered_pcl = export_ply_file(vertices, colors, clipped_clustered_export_file_path)
-
-                # Color filtering
-                vertices, colors = green_index(clustered_pcl)
-                green_pcl = export_ply_file(vertices, colors, clipped_clustered_green_export_file_path)
-                vertices, colors = red_index(clustered_pcl)
-                red_pcl = export_ply_file(vertices, colors, clipped_clustered_red_export_file_path)
-
-                # Red from clipped
-                vertices, colors = red_index(cropped_pcl)
-                red_pcl = export_ply_file(vertices, colors, red_from_clipped_export_file_path)
-
-    elif runtype == 'one_file':
-        file = r'240124_53_1_867p58.ply'
-        ply_folder_path = r'D:\results\plys'
-
-        clipped_export_folder_path = r'D:\results\plys\clipped\cubes'
-        red_from_clipped_export_folder_path = r'D:\results\plys\clipped\cubes\red_from_clipped'
-        clipped_clustered_export_folder_path = r'D:\results\plys\clipped\cubes\clustered'
-        clipped_clustered_green_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green'
-        clipped_clustered_red_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\red'
-        clipped_export_file_path = os.path.join(clipped_export_folder_path, file)
-        red_from_clipped_export_file_path = os.path.join(red_from_clipped_export_folder_path, file)
-        clipped_clustered_export_file_path = os.path.join(clipped_clustered_export_folder_path, file)
-        clipped_clustered_green_export_file_path = os.path.join(clipped_clustered_green_export_folder_path, file)
-        clipped_clustered_red_export_file_path = os.path.join(clipped_clustered_red_export_folder_path, file)
-
-        ply_file_path = os.path.join(clipped_export_folder_path, file)
-        # Open a file
-        pcl = open_ply_file(ply_file_path)
-        #
-        # # Cropping
-        # vertices, colors = extract_camera_points(pcl)
-        # cube = create_a_cube(vertices)
-        # vertices, colors = crop_a_point_cloud(pcl, cube, 'cube')
-        # cropped_pcl = export_ply_file(vertices, colors, clipped_export_file_path)
-
-        cropped_pcl = pcl
-
-        # Clustering
-        vertices, colors, assigned_clusters, df = create_clusters(cropped_pcl)
-        clustered_pcl = export_ply_file(vertices, colors, clipped_clustered_export_file_path)
-
-        # Color filtering
-        vertices, colors = green_index(clustered_pcl)
-        green_pcl = export_ply_file(vertices, colors, clipped_clustered_green_export_file_path)
-        vertices, colors = red_index(clustered_pcl)
-        red_pcl = export_ply_file(vertices, colors, clipped_clustered_red_export_file_path)
-
-        # Red from clipped
-        vertices, colors = red_index(cropped_pcl)
-        red_pcl = export_ply_file(vertices, colors, red_from_clipped_export_file_path)
+    if runtype == 'test':
+        for x, y in folders_paths.items():
+            print(x, y)
 
     elif runtype == 'red_from_clipped':
         # Set import path

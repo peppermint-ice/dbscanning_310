@@ -60,7 +60,7 @@ def rotate_ply_to_xy_and_save(plane_coeffs, point_cloud, save_path="rotated_pot.
 # Manually enter the indices of the points you want to use for fitting the plane
 selected_indices = [6, 941, 206, 2214, 842, 671, 323, 97, 333, 758, 66]
 
-pot_point_cloud, pot_file = open_ply_file("pot_clustered.ply")
+pot_point_cloud, pot_file = open_ply_file("../pot_clustered.ply")
 
 # Extract the subset of points based on the selected indices
 subset_of_points = pot_file.points[selected_indices]
