@@ -167,7 +167,7 @@ plt.xticks(bar_positions + bar_width * (len(models) / 2), rsquared_df.columns.st
 plt.legend()
 
 plt.tight_layout()
-plt.savefig(os.path.join(output_folder, 'total.png', dpi=300), transparent=True)
+plt.savefig(os.path.join(output_folder, 'total.png'), dpi=300, transparent=True)
 # Show the plot
 # plt.show()
 
