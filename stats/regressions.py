@@ -77,9 +77,9 @@ def fit_and_plot_model(x, y, model_name, output_folder):
     return model, model_name
 
 
-csv_file_path = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated\alpha_shapes\df.csv'
-csv2_file_path = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated\alpha_shapes\df2.csv'
-output_folder = r'D:\results\plys\clipped\clustered\color_filtered\green\rotated\alpha_shapes\plots\regressions'
+csv_file_path = r'G:\My Drive\Dmitrii - Ph.D Thesis\Frost room Experiment Data\LA\plys\data\alphas.csv'
+csv2_file_path = r'G:\My Drive\Dmitrii - Ph.D Thesis\Frost room Experiment Data\LA\plys\data\alphas_reg.csv'
+output_folder = r'G:\My Drive\Dmitrii - Ph.D Thesis\Frost room Experiment Data\LA\plys\data\plots\alphas\regressions'
 df = pd.read_csv(csv_file_path)
 print(df.to_string())
 
