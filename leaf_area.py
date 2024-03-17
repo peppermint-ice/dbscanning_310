@@ -386,7 +386,7 @@ def create_ball_pivoting_shape(point_cloud_file_path, radii, output_file_path=No
     # Estimate normals
     point_cloud.estimate_normals()
     # Compute Ball pivoting shape
-    ball_pivoting_shape = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(point_cloud, radii)
+    ball_pivoting_shape = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(point_cloud, o3d.utility.DoubleVector(radii))
 
     # It allows to avoid saving a .ply with an alpha shape in case you don't need it
     if output_file_path:
@@ -399,6 +399,22 @@ def create_ball_pivoting_shape(point_cloud_file_path, radii, output_file_path=No
     ball_pivoting_shape.remove_unreferenced_vertices()
 
     return ball_pivoting_shape
+
+
+def create_convex_hull_shape(point_cloud_file_path, depth, output_file_path=None):
+    # Load point cloud from .ply file
+    point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
+    # Estimate normals
+    point_cloud.estimate_normals()
+    # Compute convex_hull shape
+    convex_hull_shape, _ = point_cloud.compute_convex_hull()
+
+    # It allows to avoid saving a .ply with an alpha shape in case you don't need it
+    if output_file_path:
+        # Save convex_hull shape to a .ply file
+        o3d.io.write_triangle_mesh(output_file_path, convex_hull_shape)
+
+    return convex_hull_shape
 
 
 def calculate_watertight_volume(shape):
