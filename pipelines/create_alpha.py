@@ -1,4 +1,4 @@
-from .. import leaf_area as la
+from dbscanning_310 import leaf_area as la
 from config import paths
 import os
 import re
