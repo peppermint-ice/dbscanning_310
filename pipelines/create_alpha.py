@@ -4,6 +4,11 @@ import os
 import re
 import pandas as pd
 import time
+import sys
+
+# Extract start and end indices from command-line arguments
+start_index = int(sys.argv[1])
+end_index = int(sys.argv[2])
 
 
 # Set import path
@@ -23,7 +28,7 @@ df = pd.DataFrame()
 # Start time measurement
 start_time = time.time()
 
-for file in plys:
+for file in plys[start_index-1:end_index]:
     ply_file_path = os.path.join(corrected_folder_path, file)
     if os.path.isfile(ply_file_path) and ply_file_path.lower().endswith('.ply'):
         # Set up iteration start time

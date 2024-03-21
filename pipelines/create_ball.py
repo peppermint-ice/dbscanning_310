@@ -4,6 +4,11 @@ import os
 import re
 import pandas as pd
 import time
+import sys
+
+# Extract start and end indices from command-line arguments
+start_index = int(sys.argv[1])
+end_index = int(sys.argv[2])
 
 # Set import path
 folder_paths = paths.get_paths()
