@@ -1,6 +1,6 @@
-import leaf_area as la
+from dbscanning_310 import leaf_area as la
+from dbscanning_310.config import paths
 import os
-from config import paths
 
 
 # Set import path

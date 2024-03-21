@@ -1,5 +1,5 @@
-import leaf_area as la
-from config import paths
+from dbscanning_310 import leaf_area as la
+from dbscanning_310.config import paths
 import os
 import re
 import pandas as pd

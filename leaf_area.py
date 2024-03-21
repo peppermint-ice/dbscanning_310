@@ -7,7 +7,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics import pairwise_distances
 from scipy.spatial.transform import Rotation
 from scipy.optimize import minimize
-from config import paths
+from dbscanning_310.config import paths
 
 import os
 import re
@@ -493,6 +493,8 @@ def calculate_shape_parameters(point_cloud_data_file, shape, total_volume):
     }
     return parameters
 
+
+print('loaded')
 
 if __name__ == '__main__':
     folders_paths = paths.get_paths()
