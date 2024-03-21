@@ -1,4 +1,4 @@
-import leaf_area as la
+from .. import leaf_area as la
 from config import paths
 import os
 import re
