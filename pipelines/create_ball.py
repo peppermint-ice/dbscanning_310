@@ -1,9 +1,9 @@
-from dbscanning_310 import leaf_area as la
-from dbscanning_310.config import paths
+import leaf_area as la
+from config import paths
 import os
 import re
 import pandas as pd
-
+import time
 
 # Set import path
 folder_paths = paths.get_paths()
@@ -17,9 +17,16 @@ csv_file_path = os.path.join(csv_folder_path, csv_file_name)
 
 plys = os.listdir(corrected_folder_path)
 df = pd.DataFrame()
+
+# Start time measurement
+start_time = time.time()
+
 for file in plys:
     ply_file_path = os.path.join(corrected_folder_path, file)
     if os.path.isfile(ply_file_path) and ply_file_path.lower().endswith('.ply'):
+        # Set up iteration start time
+        iteration_time = time.time()
+
         # Set export folder for ball_pivoting shapes
         ball_pivoting_export_file_path = os.path.join(ball_pivoting_folder_path, file)
         print(ply_file_path)
@@ -41,5 +48,13 @@ for file in plys:
         if parameters['Measured_leaf_area'] > 0:
             df = pd.concat([df, pd.DataFrame([parameters])], ignore_index=True)
 
+        # Measure time taken for this iteration
+        iteration_time = time.time() - iteration_time
+        print(f"Time taken for this iteration: {iteration_time} seconds")
+
 print(df.to_string())
 df.to_csv(csv_file_path, index=False)
+
+# Total time taken for the loop
+total_time = time.time() - start_time
+print(f"Total time taken: {total_time} seconds")

@@ -1,5 +1,5 @@
-from dbscanning_310 import leaf_area as la
-from dbscanning_310.config import paths
+import leaf_area as la
+from config import paths
 import os
 
 

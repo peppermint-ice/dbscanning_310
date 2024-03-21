@@ -7,7 +7,7 @@ from sklearn.cluster import DBSCAN
 from sklearn.metrics import pairwise_distances
 from scipy.spatial.transform import Rotation
 from scipy.optimize import minimize
-from dbscanning_310.config import paths
+from config import paths
 
 import os
 import re
