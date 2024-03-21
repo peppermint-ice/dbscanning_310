@@ -1,6 +1,9 @@
+import sys
+import os
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from dbscanning_310 import leaf_area as la
 from config import paths
-import os
+
 import re
 import pandas as pd
 
