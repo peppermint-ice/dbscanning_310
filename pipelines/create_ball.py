@@ -29,7 +29,7 @@ for file in plys:
         pcl = la.open_ply_file(ply_file_path)
 
         # Create ball_pivoting shapes
-        radii_value = [1, 3, 10, 15]  # Adjust ball_pivoting depth as needed
+        radii_value = [3, 10, 15, 20]  # Adjust ball_pivoting depth as needed
         ball_pivoting_shape = la.create_ball_pivoting_shape(ply_file_path, radii_value, ball_pivoting_export_file_path)
         total_volume = la.calculate_watertight_volume(ball_pivoting_shape)
 
