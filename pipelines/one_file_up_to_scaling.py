@@ -1,6 +1,6 @@
 import leaf_area as la
-import os
 from config import paths
+import os
 
 
 # Set import path

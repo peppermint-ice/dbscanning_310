@@ -31,6 +31,7 @@ def get_paths():
         "marching_cubes": os.path.join(config[hostname]["plys"], "shapes/marching_cubes"),
         "bvas": os.path.join(config[hostname]["plys"], "shapes/bva"),
         "ball_pivoting": os.path.join(config[hostname]["plys"], "shapes/ball_pivoting"),
+        "convex_hull": os.path.join(config[hostname]["plys"], "shapes/convex_hull"),
         "data": os.path.join(config[hostname]["plys"], "data"),
         "plots": os.path.join(config[hostname]["plys"], "data/plots"),
     }

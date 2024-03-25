@@ -386,7 +386,7 @@ def create_ball_pivoting_shape(point_cloud_file_path, radii, output_file_path=No
     # Estimate normals
     point_cloud.estimate_normals()
     # Compute Ball pivoting shape
-    ball_pivoting_shape = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(point_cloud, radii)
+    ball_pivoting_shape = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(point_cloud, o3d.utility.DoubleVector(radii))
 
     # It allows to avoid saving a .ply with an alpha shape in case you don't need it
     if output_file_path:
@@ -399,6 +399,22 @@ def create_ball_pivoting_shape(point_cloud_file_path, radii, output_file_path=No
     ball_pivoting_shape.remove_unreferenced_vertices()
 
     return ball_pivoting_shape
+
+
+def create_convex_hull_shape(point_cloud_file_path, depth, output_file_path=None):
+    # Load point cloud from .ply file
+    point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
+    # Estimate normals
+    point_cloud.estimate_normals()
+    # Compute convex_hull shape
+    convex_hull_shape, _ = point_cloud.compute_convex_hull()
+
+    # It allows to avoid saving a .ply with an alpha shape in case you don't need it
+    if output_file_path:
+        # Save convex_hull shape to a .ply file
+        o3d.io.write_triangle_mesh(output_file_path, convex_hull_shape)
+
+    return convex_hull_shape
 
 
 def calculate_watertight_volume(shape):
@@ -478,6 +494,8 @@ def calculate_shape_parameters(point_cloud_data_file, shape, total_volume):
     return parameters
 
 
+print('loaded')
+
 if __name__ == '__main__':
     folders_paths = paths.get_paths()
 
@@ -494,77 +512,3 @@ if __name__ == '__main__':
     if runtype == 'test':
         for x, y in folders_paths.items():
             print(x, y)
-
-    elif runtype == 'red_from_clipped':
-        # Set import path
-        clipped_folder_path = r'D:\results\plys\clipped\cubes'
-
-        # Set export folders
-        red_from_clipped_export_folder_path = r'D:\results\plys\clipped\cubes\red_from_clipped'
-
-        plys = os.listdir(clipped_folder_path)
-        for file in plys:
-            ply_file_path = os.path.join(clipped_folder_path, file)
-            if os.path.isfile(ply_file_path) and file != "complete_la_data.csv" and file != "set1_la_final.csv":
-                # Set export paths
-                red_from_clipped_export_file_path = os.path.join(red_from_clipped_export_folder_path, file)
-
-                print(ply_file_path)
-                print(red_from_clipped_export_file_path)
-
-                # Open a file
-                pcl = open_ply_file(ply_file_path)
-                cropped_pcl = pcl
-
-                # Color filtering
-                vertices, colors = red_index(cropped_pcl)
-                red_pcl = export_ply_file(vertices, colors, red_from_clipped_export_file_path)
-
-    elif runtype == 'scale':
-        circles_folder_path = r'D:\results\plys\circles'
-        green_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green'
-        rotated_export_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green\rotated'
-        plys = os.listdir(circles_folder_path)
-        for file in plys:
-            ply_file_path = os.path.join(circles_folder_path, file)
-            green_ply_file_path = os.path.join(green_folder_path, file)
-            rotated_export_file_path = os.path.join(rotated_export_folder_path, file)
-            if os.path.isfile(ply_file_path) and file != "complete_la_data.csv" and file != "set1_la_final.csv":
-                print(ply_file_path)
-                print(rotated_export_file_path)
-                print(green_ply_file_path)
-
-                pcl = open_ply_file(ply_file_path)
-                circle_pcl = pcl
-                green_pcl = open_ply_file(green_ply_file_path)
-
-                scaling_parameters = calculate_rotation_and_scaling(circle_pcl)
-                vertices, colors = transform_point_cloud(green_pcl, scaling_parameters)
-                export_ply_file(vertices, colors, output_filepath=rotated_export_file_path)
-
-    elif runtype == 'create_alpha':
-        ply_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green\rotated\corrected'
-        alpha_folder_path = r'D:\results\plys\clipped\cubes\clustered\color_filtered\green\rotated\alpha_shapes'
-        csv_file_path = r'D:\results\plys\clipped\clustered\cubes\color_filtered\green\rotated\alpha_shapes\alpha_shapes1203.csv'
-
-        plys = os.listdir(ply_folder_path)
-        df = pd.DataFrame()
-
-        for file in plys:
-            ply_file_path = os.path.join(ply_folder_path, file)
-            if os.path.isfile(ply_file_path):
-                alpha_file_path = os.path.join(alpha_folder_path, file)
-                print(ply_file_path)
-                print(alpha_file_path)
-                pcl = open_ply_file(ply_file_path)
-                alpha_value = 0.5  # Adjust alpha as needed
-                alpha_shape = create_alpha_shape(ply_file_path, alpha_file_path, alpha_value)
-                total_volume = calculate_watertight_volume(alpha_shape)
-                parameters = calculate_shape_parameters(pcl, alpha_shape, total_volume)
-                parameters['File_name'] = file
-                match = re.search(r'(\d+p\d+\.)', file)
-                parameters['Measured_leaf_area'] = float(match.group().replace('p', '.')[:-1])
-                df = pd.concat([df, pd.DataFrame([parameters])], ignore_index=True)
-        print(df.to_string())
-        df.to_csv(csv_file_path, index=False)
-
