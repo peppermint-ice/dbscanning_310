@@ -18,8 +18,6 @@ folder_paths = paths.get_paths()
 corrected_folder_path = folder_paths["corrected"]
 alpha_folder_path = folder_paths["alphas"]
 csv_folder_path = folder_paths["data"]
-csv_file_name = "alphas.csv"
-csv_file_path = os.path.join(csv_folder_path, csv_file_name)
 
 
 plys = os.listdir(corrected_folder_path)
@@ -59,8 +57,11 @@ for file in plys[start_index-1:end_index]:
         iteration_time = time.time() - iteration_time
         print(f"Time taken for this iteration: {iteration_time} seconds")
 
-print(df.to_string())
-df.to_csv(csv_file_path, index=False)
+        csv_file_name = "alphas" + (start_index-1) + '.csv'
+        csv_file_path = os.path.join(csv_folder_path, csv_file_name)
+
+        print(df.to_string())
+        df.to_csv(csv_file_path, index=False)
 
 # Total time taken for the loop
 total_time = time.time() - start_time
