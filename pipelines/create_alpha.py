@@ -55,7 +55,7 @@ for file in plys[start_index-1:end_index]:
 
         # Measure time taken for this iteration
         iteration_time = time.time() - iteration_time
-        print(f"Time taken for this iteration: {iteration_time} seconds")
+        print("Time taken for this iteration: " + str(iteration_time) + " seconds")
 
         csv_file_name = "alphas" + str((start_index - 1)) + '.csv'
         csv_file_path = os.path.join(csv_folder_path, csv_file_name)
