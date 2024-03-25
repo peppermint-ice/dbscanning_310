@@ -16,9 +16,7 @@ folder_paths = paths.get_paths()
 # Set export folders
 corrected_folder_path = folder_paths["corrected"]
 ball_pivoting_folder_path = folder_paths["ball_pivoting"]
-csv_folder_path = folder_paths["plys"]
-csv_file_name = "ball_pivoting.csv"
-csv_file_path = os.path.join(csv_folder_path, csv_file_name)
+csv_folder_path = folder_paths["data"]
 
 plys = os.listdir(corrected_folder_path)
 df = pd.DataFrame()
@@ -55,11 +53,14 @@ for file in plys:
 
         # Measure time taken for this iteration
         iteration_time = time.time() - iteration_time
-        print(f"Time taken for this iteration: {iteration_time} seconds")
+        print("Time taken for this iteration: " + str(iteration_time) + " seconds")
 
-print(df.to_string())
-df.to_csv(csv_file_path, index=False)
+        csv_file_name = "ball" + str((start_index - 1)) + '.csv'
+        csv_file_path = os.path.join(csv_folder_path, csv_file_name)
+
+        print(df.to_string())
+        df.to_csv(csv_file_path, index=False)
 
 # Total time taken for the loop
 total_time = time.time() - start_time
-print(f"Total time taken: {total_time} seconds")
+print("Total time taken: " + str(total_time) + " seconds")

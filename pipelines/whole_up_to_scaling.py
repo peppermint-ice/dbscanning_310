@@ -62,8 +62,8 @@ for file in plys:
 
         # Measure time taken for this iteration
         iteration_time = time.time() - iteration_time
-        print(f"Time taken for this iteration: {iteration_time} seconds")
+        print("Time taken for this iteration: " + str(iteration_time) + " seconds")
 
 # Total time taken for the loop
 total_time = time.time() - start_time
-print(f"Total time taken: {total_time} seconds")
+print("Total time taken: " + str(total_time) + " seconds")
