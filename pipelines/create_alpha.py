@@ -65,4 +65,4 @@ for file in plys[start_index-1:end_index]:
 
 # Total time taken for the loop
 total_time = time.time() - start_time
-print(f"Total time taken: {total_time} seconds")
+print("Total time taken: " + str(total_time) + " seconds")
