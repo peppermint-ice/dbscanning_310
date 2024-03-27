@@ -37,16 +37,11 @@ for file in plys[start_index-1:end_index]:
             # Set up iteration start time
             iteration_time = time.time()
 
-            # Set export folder for alpha shapes
-            alpha_export_file_path = os.path.join(alpha_folder_path, file)
-            print(ply_file_path)
-            print(alpha_export_file_path)
-
             # Open a ply
             pcl = la.open_ply_file(ply_file_path)
 
             # Create alpha shapes
-            alpha_shape = la.create_alpha_shape(ply_file_path, alpha_value, alpha_export_file_path)
+            alpha_shape = la.create_alpha_shape(ply_file_path, alpha_value)
             total_volume = la.calculate_watertight_volume(alpha_shape)
 
             # Remember parameters
