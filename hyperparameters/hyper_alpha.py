@@ -32,8 +32,8 @@ start_time = time.time()
 
 for alpha_value in alpha_values:
     df = pd.DataFrame()
-    ply_file_path = os.path.join(corrected_folder_path, file)
     for file in plys[start_index - 1:end_index]:
+        ply_file_path = os.path.join(corrected_folder_path, file)
         print("Alpha value: " + str(alpha_value))
         if os.path.isfile(ply_file_path) and ply_file_path.lower().endswith('.ply'):
             # Set up iteration start time
