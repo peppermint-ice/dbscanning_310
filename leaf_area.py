@@ -442,13 +442,25 @@ def calculate_shape_parameters(point_cloud_data_file, shape, total_volume):
     surface_area = shape.get_surface_area()
 
     # Calculate aspect ratio
-    aspect_ratio = np.max(dimensions) / np.min(dimensions)
+    try:
+        aspect_ratio = np.max(dimensions) / np.min(dimensions)
+    except ZeroDivisionError:
+        print("Can't calculate aspect ratio. Division by zero. Aspect Ratio set to 0")
+        aspect_ratio = 0
 
     # Calculate elongation
-    elongation = (np.max(dimensions) / np.median(dimensions)) - 1
+    try:
+        elongation = (np.max(dimensions) / np.median(dimensions)) - 1
+    except ZeroDivisionError:
+        print("Can't calculate elongation. Division by zero.")
+        elongation = 0
 
     # Calculate flatness
-    flatness = (np.min(dimensions) / np.median(dimensions)) - 1
+    try:
+        flatness = (np.min(dimensions) / np.median(dimensions)) - 1
+    except ZeroDivisionError:
+        print("Can't calculate flatness. Division by zero.")
+        flatness = 0
 
     # Get connected components
     connected_components = shape.cluster_connected_triangles()
@@ -457,10 +469,18 @@ def calculate_shape_parameters(point_cloud_data_file, shape, total_volume):
     component_parameters = {}
 
     # Calculate sphericity for the entire alpha shape
-    sphericity = (np.pi ** (1 / 3)) * ((6 * total_volume) ** (2 / 3)) / surface_area
+    try:
+        sphericity = (np.pi ** (1 / 3)) * ((6 * total_volume) ** (2 / 3)) / surface_area
+    except ZeroDivisionError:
+        print("Can't calculate sphericity. Division by zero.")
+        sphericity = 0
 
     # Calculate compactness for the entire alpha shape
-    compactness = (36 * np.pi * total_volume ** 2) ** (1 / 3) / surface_area
+    try:
+        compactness = (36 * np.pi * total_volume ** 2) ** (1 / 3) / surface_area
+    except ZeroDivisionError:
+        print("Can't calculate compactness. Division by zero.")
+        compactness = 0
 
     # Calculate number of independent components
     vertices = np.asarray(shape.vertices)
@@ -475,7 +495,12 @@ def calculate_shape_parameters(point_cloud_data_file, shape, total_volume):
 
     # Get the number of points inside the alpha shape
     num_points_inside = len(point_cloud_array)
-    point_density = num_points_inside / total_volume
+    try:
+        point_density = num_points_inside / total_volume
+    except ZeroDivisionError:
+        print("Can't calculate point density. Division by zero.")
+        point_density = 0
+
     # Store parameters for the entire alpha shape
     parameters = {
         'Height': dimensions[0],
