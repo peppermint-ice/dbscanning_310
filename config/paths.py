@@ -33,6 +33,7 @@ def get_paths():
         "ball_pivoting": os.path.join(config[hostname]["plys"], "shapes/ball_pivoting"),
         "convex_hull": os.path.join(config[hostname]["plys"], "shapes/convex_hull"),
         "data": os.path.join(config[hostname]["plys"], "data"),
+        "hyperparameters": os.path.join(config[hostname]["plys"], "data/hyperparameters"),
         "plots": os.path.join(config[hostname]["plys"], "data/plots"),
     }
 
