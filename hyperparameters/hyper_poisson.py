@@ -61,7 +61,7 @@ for poisson_value in poisson_values:
 
                 csv_file_name = str(poisson_value).replace(".", "_") + "poissons" + str((start_index - 1)) + '.csv'
                 csv_file_path = os.path.join(csv_folder_path, csv_file_name)
-
+                print("CSV path: " + csv_file_path)
                 print(df.to_string())
             except IndexError:
                 print("Index error. The poisson is not good")
