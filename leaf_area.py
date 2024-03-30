@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
 import open3d as o3d
+import pymcubes
 
+import pyvista as pv
 from matplotlib import pyplot as plt
 from sklearn.cluster import DBSCAN
 from sklearn.metrics import pairwise_distances
@@ -399,6 +401,43 @@ def create_ball_pivoting_shape(point_cloud_file_path, radii, output_file_path=No
     ball_pivoting_shape.remove_unreferenced_vertices()
 
     return ball_pivoting_shape
+
+
+def create_marching_cubes_shape(point_cloud_file_path, threshold, output_file_path=None):
+    # Load point cloud from .ply file
+    point_cloud = pv.read(point_cloud_file_path)
+
+    # Convert the point cloud to NumPy array
+    points = np.array(point_cloud.points)
+
+    # Rescale the coordinates to the range [-1, 1]
+    min_coords = points.min(axis=0)
+    max_coords = points.max(axis=0)
+    scaled_points = (points - min_coords) / (max_coords - min_coords) * 2 - 1
+
+    # Create a 3D scalar field from the point cloud
+    values, edges = np.histogramdd(scaled_points, bins=50, range=[[-1, 1], [-1, 1], [-1, 1]])
+
+    # Threshold the scalar field to extract the surface
+    vertices, triangles = pymcubes.marching_cubes(values, threshold)
+
+    # Rescale the vertices back to the original coordinate range
+    scaled_vertices = vertices * (max_coords - min_coords) / 2 + (max_coords + min_coords) / 2
+
+    # Create a PyVista mesh from the vertices and triangles
+    mesh = pv.PolyData(scaled_vertices, triangles)
+
+    # It allows to avoid saving a .ply in case you don't need it
+    if output_file_path:
+        # Save Marching Cubes shape to a .ply file
+        mesh.save(output_file_path)
+
+    # Ensure mesh is watertight
+    mesh.compute_normals()
+    mesh.remove_degenerate_triangles()
+    mesh.remove_unused_points()
+
+    return mesh
 
 
 def create_convex_hull_shape(point_cloud_file_path, depth, output_file_path=None):
