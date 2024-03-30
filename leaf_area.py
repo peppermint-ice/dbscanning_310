@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 import open3d as o3d
-import pymcubes
+import mcubes
 
 import pyvista as pv
 from matplotlib import pyplot as plt
@@ -419,7 +419,7 @@ def create_marching_cubes_shape(point_cloud_file_path, threshold, output_file_pa
     values, edges = np.histogramdd(scaled_points, bins=50, range=[[-1, 1], [-1, 1], [-1, 1]])
 
     # Threshold the scalar field to extract the surface
-    vertices, triangles = pymcubes.marching_cubes(values, threshold)
+    vertices, triangles = mcubes.marching_cubes(values, threshold)
 
     # Rescale the vertices back to the original coordinate range
     scaled_vertices = vertices * (max_coords - min_coords) / 2 + (max_coords + min_coords) / 2
