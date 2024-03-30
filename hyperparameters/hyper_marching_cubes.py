@@ -16,7 +16,7 @@ folder_paths = paths.get_paths()
 
 # Set folders
 corrected_folder_path = folder_paths["corrected"]
-marching_cubes_folder_path = folder_paths["marching_cubess"]
+marching_cubes_folder_path = folder_paths["marching_cubes"]
 csv_folder_path = folder_paths["hyperparameters"]
 
 
