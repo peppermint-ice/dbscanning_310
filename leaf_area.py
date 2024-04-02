@@ -414,28 +414,33 @@ def create_marching_cubes_shape(point_cloud_file_path, threshold, output_file_pa
     min_coords = points.min(axis=0)
     max_coords = points.max(axis=0)
     scaled_points = (points - min_coords) / (max_coords - min_coords) * 2 - 1
-
+    print('File transformed')
     # Create a 3D scalar field from the point cloud
     values, edges = np.histogramdd(scaled_points, bins=50, range=[[-1, 1], [-1, 1], [-1, 1]])
-
+    print('Bins created')
     # Threshold the scalar field to extract the surface
     vertices, triangles = mcubes.marching_cubes(values, threshold)
-
+    print("Marching cubes done")
     # Rescale the vertices back to the original coordinate range
     scaled_vertices = vertices * (max_coords - min_coords) / 2 + (max_coords + min_coords) / 2
-
+    print("Rescaled")
     # Create a PyVista mesh from the vertices and triangles
-    mesh = pv.PolyData(scaled_vertices, triangles)
-
+    # mesh = pv.PolyData(scaled_vertices, triangles)
+    # print("Pyvista mesh created")
+    # Create an o3d mesh
+    mesh = o3d.geometry.TriangleMesh()
+    mesh.vertices = o3d.utility.Vector3dVector(scaled_vertices)
+    mesh.triangles = o3d.utility.Vector3iVector(triangles)
+    print("o3d mesh created")
     # It allows to avoid saving a .ply in case you don't need it
     if output_file_path:
         # Save Marching Cubes shape to a .ply file
-        mesh.save(output_file_path)
+        o3d.io.write_triangle_mesh(output_file_path, mesh)
 
-    # Ensure mesh is watertight
-    mesh.compute_normals()
-    mesh.remove_degenerate_triangles()
-    mesh.remove_unused_points()
+    # # Ensure mesh is watertight
+    # mesh.compute_normals()
+    # mesh.remove_degenerate_triangles()
+    # mesh.remove_unused_points()
 
     return mesh
 
