@@ -27,9 +27,10 @@ for file in csvs:
         df_current = pd.read_csv(file_path)
 
         for x in df_current.index:
-            df_current['parameter_type', x] = parameter_type
-            df_current['parameter_value', x] = parameter_value
+            df_current.loc[x, 'parameter_type'] = parameter_type
+            df_current.loc[x, 'parameter_value'] = parameter_value
         print(df_current.to_string())
-        pd.concat([df, df_current], ignore_index=True)
+        df = pd.concat([df, df_current], ignore_index=True)
 
 final_csv_file_path = os.path.join(csv_folder_path, '001final.csv')
+df.to_csv(final_csv_file_path, index=False)
