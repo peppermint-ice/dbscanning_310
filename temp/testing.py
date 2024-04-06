@@ -8,7 +8,6 @@ folder_paths = paths.get_paths()
 
 # Set folders
 corrected_folder_path = folder_paths["corrected"]
-marching_cubes_folder_path = folder_paths["marching_cubes"]
 csv_folder_path = folder_paths["hyperparameters"]
 
 csvs = os.listdir(csv_folder_path)
@@ -29,4 +28,6 @@ for file in csvs:
             df_current['parameter_type', x] = parameter_type
             df_current['parameter_value', x] = parameter_value
         print(df_current.to_string())
-        # pd.concat([df, df_current], ignore_index=True)
+        pd.concat([df, df_current], ignore_index=True)
+
+final_csv_file_path = os.path.join(csv_folder_path, '001final.csv')
