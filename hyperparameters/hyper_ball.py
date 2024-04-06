@@ -68,7 +68,7 @@ for ball_pivoting_value in ball_pivoting_values:
                 iteration_time = time.time() - iteration_time
                 print("Time taken for this iteration: " + str(iteration_time) + " seconds")
 
-                csv_file_name = str(ball_pivoting_value).replace(".", "_") + "ball_pivotings" + str((start_index - 1)) + '.csv'
+                csv_file_name = str(ball_pivoting_value[0]).replace(".", "_") + "ball_pivotings" + str((start_index - 1)) + '.csv'
                 csv_file_path = os.path.join(csv_folder_path, csv_file_name)
 
                 print(df.to_string())
