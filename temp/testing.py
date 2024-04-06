@@ -16,7 +16,7 @@ df = pd.DataFrame()
 for file in csvs:
     file_path = os.path.join(csv_folder_path, file)
     if os.path.isfile(file_path) and file_path.lower().endswith('.csv'):
-        pattern = r'(\d+\_?\d*)_(\w+)_\d+.csv'
+        pattern = '(\d+_?\d*)_(\w+)_(\d+).csv'
         match = re.match(pattern, file)
         print(file)
         if match:
