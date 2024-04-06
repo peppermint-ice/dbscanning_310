@@ -6,8 +6,7 @@ import pandas as pd
 # Get path
 folder_paths = paths.get_paths()
 
-# Set folders
-corrected_folder_path = folder_paths["corrected"]
+# Set folder
 csv_folder_path = folder_paths["hyperparameters"]
 
 csvs = os.listdir(csv_folder_path)
@@ -17,7 +16,7 @@ df = pd.DataFrame()
 for file in csvs:
     file_path = os.path.join(csv_folder_path, file)
     if os.path.isfile(file_path) and file_path.lower().endswith('.csv'):
-        pattern = r'([^_]+)_(\w+)_\d+\.csv'
+        pattern = r'(\d+\_?\d*)_(\w+)_\d+.csv'
         match = re.match(pattern, file)
         print(file)
         if match:
