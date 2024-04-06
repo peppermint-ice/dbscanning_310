@@ -77,9 +77,9 @@ def fit_and_plot_model(x, y, model_name, output_folder):
     return model, model_name
 
 
-csv_file_path = r'G:\My Drive\Dmitrii - Ph.D Thesis\Frost room Experiment Data\LA\plys\data\alphas.csv'
-csv2_file_path = r'G:\My Drive\Dmitrii - Ph.D Thesis\Frost room Experiment Data\LA\plys\data\alphas_reg.csv'
-output_folder = r'G:\My Drive\Dmitrii - Ph.D Thesis\Frost room Experiment Data\LA\plys\data\plots\alphas\regressions'
+csv_file_path = r'G:\My Drive\Dmitrii - Ph.D Thesis\Frost room Experiment Data\LA\plys\data\convex_hull.csv'
+csv2_file_path = r'G:\My Drive\Dmitrii - Ph.D Thesis\Frost room Experiment Data\LA\plys\data\convex_hull_reg.csv'
+output_folder = r'G:\My Drive\Dmitrii - Ph.D Thesis\Frost room Experiment Data\LA\plys\data\plots\convex_hull\regressions'
 df = pd.read_csv(csv_file_path)
 print(df.to_string())
 
@@ -99,7 +99,7 @@ model_names_list = []
 df2 = pd.DataFrame(columns=column_names)
 
 
-for model_type in ['linear', 'quadratic', 'cubic', 'logarithmic', 'exponential']:
+for model_type in ['linear', 'logarithmic']:
     row = {}
     for parameter in X.columns:
         print(model_type, parameter)
@@ -114,7 +114,7 @@ df2.to_csv(csv2_file_path, index=False)
 
 X = df[['Height', 'Length', 'Width', 'Volume', 'Surface_area', 'Aspect_ratio', 'Elongation', 'Flatness', 'Sphericity', 'Compactness', 'Components_number']]
 X['Rectangular_area'] = X['Length'] * X['Width']
-X = X[['Surface_area', 'Volume', 'Components_number', 'Height']]
+X = X[['Surface_area', 'Volume', 'Components_number', 'Height', 'Rectangular_area']]
 
 # check linear regression
 # Add a constant term to the model
@@ -143,7 +143,7 @@ print(model.summary())
 # Plotting the R2s
 rsquared_df = pd.read_csv(csv2_file_path)
 
-rsquared_df.index = ['linear', 'quadratic', 'cubic', 'logarithmic', 'exponential']
+rsquared_df.index = ['linear', 'logarithmic']
 
 # Set the color map for each model type
 cmap = get_cmap('viridis', len(rsquared_df.index))

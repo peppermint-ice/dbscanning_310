@@ -18,7 +18,7 @@ import trimesh
 
 
 def open_ply_file(file_path):
-    """ This function opens a ply file and returns it as a numpy array """
+    """ This function opens a ply file and returns it as a o3d object """
     point_cloud_data_file = o3d.io.read_point_cloud(file_path)
     return point_cloud_data_file
 
@@ -285,9 +285,6 @@ def calculate_rotation_and_scaling(circle_point_cloud):
     return scaling_parameters
 
 
-
-
-
 def transform_point_cloud(point_cloud, scaling_parameters):
     # Extract
     rotation_matrix, scale_factor = scaling_parameters
@@ -346,6 +343,7 @@ def create_alpha_shape(point_cloud_file_path, alpha, output_file_path=None):
     point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
     # Estimate normals
     point_cloud.estimate_normals()
+    point_cloud.orient_normals_consistent_tangent_plane(100)
     # Compute alpha shape
     alpha_shape = o3d.geometry.TriangleMesh.create_from_point_cloud_alpha_shape(
         point_cloud, alpha=alpha
@@ -362,6 +360,7 @@ def create_poisson_shape(point_cloud_file_path, depth, output_file_path=None):
     point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
     # Estimate normals
     point_cloud.estimate_normals()
+    point_cloud.orient_normals_consistent_tangent_plane(100)
     # Compute Poisson shape
     poisson_shape, densities = o3d.geometry.TriangleMesh.create_from_point_cloud_poisson(
         point_cloud,
@@ -387,6 +386,7 @@ def create_ball_pivoting_shape(point_cloud_file_path, radii, output_file_path=No
     point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
     # Estimate normals
     point_cloud.estimate_normals()
+    point_cloud.orient_normals_consistent_tangent_plane(100)
     # Compute Ball pivoting shape
     ball_pivoting_shape = o3d.geometry.TriangleMesh.create_from_point_cloud_ball_pivoting(point_cloud, o3d.utility.DoubleVector(radii))
 
@@ -440,11 +440,12 @@ def create_marching_cubes_shape(point_cloud_file_path, threshold, output_file_pa
     return mesh
 
 
-def create_convex_hull_shape(point_cloud_file_path, depth, output_file_path=None):
+def create_convex_hull_shape(point_cloud_file_path, output_file_path=None):
     # Load point cloud from .ply file
     point_cloud = o3d.io.read_point_cloud(point_cloud_file_path)
     # Estimate normals
     point_cloud.estimate_normals()
+    point_cloud.orient_normals_consistent_tangent_plane(100)
     # Compute convex_hull shape
     convex_hull_shape, _ = point_cloud.compute_convex_hull()
 
@@ -465,6 +466,7 @@ def calculate_watertight_volume(shape):
     total_volume = 0
     for i in mesh.split():
         if i.is_watertight:
+            print(i.volume)
             total_volume += abs(i.volume)
     return total_volume
 

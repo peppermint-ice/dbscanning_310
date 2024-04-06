@@ -40,7 +40,7 @@ for file in plys[start_index-1:end_index]:
 
         # Create convex_hull shapes
         radii_value = 5  # Adjust convex_hull depth as needed
-        convex_hull_shape = la.create_convex_hull_shape(ply_file_path, radii_value, convex_hull_export_file_path)
+        convex_hull_shape = la.create_convex_hull_shape(ply_file_path, convex_hull_export_file_path)
         total_volume = la.calculate_watertight_volume(convex_hull_shape)
 
         # Remember parameters

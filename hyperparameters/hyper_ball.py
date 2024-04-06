@@ -25,7 +25,16 @@ plys = os.listdir(corrected_folder_path)
 
 # Select desired ball_pivoting values
 
-ball_pivoting_values = [8, 9, 10, 11, 12, 13, 14, 15]
+ball_pivoting_values = [[0.05, 0.1, 0.2, 0.4],
+                        [0.1, 0.2, 0.4, 0.8],
+                        [0.152, 0.3, 0.61, 1.2],
+                        [0.2, 0.4, 0.8, 1.6],
+                        [0.25, 0.5, 1.0, 2.0],
+                        [0.3, 0.6, 1.2, 2.4],
+                        [0.35, 0.7, 1.4, 2.8],
+                        [0.4, 0.8, 1.6, 3.2],
+                        [0.45, 0.9, 1.8, 3.6],
+                        [0.5, 1.0, 2.0, 4.0]]
 
 # Start time measurement
 start_time = time.time()
