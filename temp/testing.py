@@ -16,13 +16,16 @@ df = pd.DataFrame()
 for file in csvs:
     file_path = os.path.join(csv_folder_path, file)
     if os.path.isfile(file_path) and file_path.lower().endswith('.csv'):
-        pattern = r'(\d+_?\d*)(?:_(\w+)_?)?(\d+)\.csv'
+        pattern = r'(\d+_?\d*)(\D+)(\d+)\.csv'
         match = re.match(pattern, file)
         print(file)
         if match:
             parameter_value = match.group(1).replace('_', '.')
             parameter_type = match.group(2)
+            print(parameter_type)
+            print(parameter_value)
         df_current = pd.read_csv(file_path)
+
         for x in df_current.index:
             df_current['parameter_type', x] = parameter_type
             df_current['parameter_value', x] = parameter_value
