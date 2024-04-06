@@ -16,7 +16,7 @@ folder_paths = paths.get_paths()
 
 # Set folders
 corrected_folder_path = folder_paths["corrected"]
-ball_pivoting_folder_path = folder_paths["ball_pivotings"]
+ball_pivoting_folder_path = folder_paths["ball_pivoting"]
 csv_folder_path = folder_paths["hyperparameters"]
 
 
