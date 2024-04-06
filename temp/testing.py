@@ -1,24 +1,32 @@
 from config import paths
-import pandas as pd
 import os
 import re
+import pandas as pd
 
-# Set path
+# Get path
 folder_paths = paths.get_paths()
 
-
+# Set folders
 corrected_folder_path = folder_paths["corrected"]
+marching_cubes_folder_path = folder_paths["marching_cubes"]
+csv_folder_path = folder_paths["hyperparameters"]
 
-plys = os.listdir(corrected_folder_path)
+csvs = os.listdir(csv_folder_path)
+
 df = pd.DataFrame()
-parameters = {}
-for file in plys:
-    ply_file_path = os.path.join(corrected_folder_path, file)
-    if os.path.isfile(ply_file_path) and ply_file_path.lower().endswith('.ply'):
-        match = re.search(r'(\d+p\d+\.)', file)
-        parameters['Measured_leaf_area'] = float(match.group().replace('p', '.')[:-1])
-        parameters['File_name'] = file
-        if parameters['Measured_leaf_area'] > 0:
-            df = pd.concat([df, pd.DataFrame([parameters])], ignore_index=True)
 
-print(df.to_string())
+for file in csvs:
+    file_path = os.path.join(csv_folder_path, file)
+    if os.path.isfile(file_path) and file_path.lower().endswith('.csv'):
+        pattern = r'([0-9]+(?:_[0-9]+)?)_([^_]+)_([0-9]+)\.csv'
+        match = re.match(pattern, file)
+        print(file)
+        if match:
+            parameter_value = match.group(1).replace('_', '.')
+            parameter_type = match.group(2)
+        df_current = pd.read_csv(file_path)
+        for x in df_current.index:
+            df_current['parameter_type', x] = parameter_type
+            df_current['parameter_value', x] = parameter_value
+        print(df_current.to_string())
+        # pd.concat([df, df_current], ignore_index=True)
