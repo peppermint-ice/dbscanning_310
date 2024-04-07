@@ -7,7 +7,7 @@ import pandas as pd
 folder_paths = paths.get_paths()
 
 # Set folder
-csv_folder_path = folder_paths["data"]
+csv_folder_path = folder_paths["hyperparameters"]
 
 csvs = os.listdir(csv_folder_path)
 
