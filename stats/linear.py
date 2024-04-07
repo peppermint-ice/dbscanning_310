@@ -1,11 +1,6 @@
 import pandas as pd
 import numpy as np
 import os
-# from sklearn.model_selection import train_test_split
-# from sklearn.linear_model import LinearRegression
-# from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
-# from sklearn.svm import SVR
-# from sklearn.metrics import mean_squared_error
 import statsmodels.api as sm
 from matplotlib import pyplot as plt
 from config import paths
@@ -44,18 +39,7 @@ def linear(data):
     return linears
 
 
-def multivariable(folder_path):
-    return
-
-
-def rforest(folder_path):
-    return
-
-
-def svm(folder_path):
-    return
-
-def xgboost(folder_path):
+def multivariable(data):
     return
 
 
@@ -162,11 +146,5 @@ if __name__ == '__main__':
         corresponding_param = linears['Correlating_parameter'][i]
         print(f"R-squared: {r_squared}, Parameter Name: {parameter_name}, Parameter Value: {parameter_value}, Corresponding Parameter: {corresponding_param}")
 
-    # Get path
-    folder_paths = paths.get_paths()
-    csv_folder_path = folder_paths["hyperparameters"]
-    csv_import_path = os.path.join(folder_paths["data"], '001final.csv')
-    df = pd.read_csv(csv_import_path)
-    linears = linear(df)
     plot_max_r_squared(linears)
     plot_prediction(linears)
