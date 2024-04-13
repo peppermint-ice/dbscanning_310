@@ -50,7 +50,8 @@ if __name__ == '__main__':
 
     # Read the CSV file specified by the command-line argument
     df = pd.read_csv(file_path)
-
+    parameter_value = df['parameter_value'].unique()[0]
+    parameter_type = df['parameter_type'].unique()[0]
     print(df['parameter_type'].unique())
 
     # First run of train-test split to set the desired columns
@@ -105,8 +106,7 @@ if __name__ == '__main__':
         # print('r2 val: ', r2_val)
         # print('')
 
-        parameter_value = df['parameter_value'].unique()[0]
-        parameter_type = df['parameter_type'].unique()[0]
+
 
         current_results['Parameter_value'] = parameter_value
         current_results['Parameter_name'] = parameter_type
