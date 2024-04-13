@@ -37,6 +37,7 @@ def get_paths():
         "reconstructions_by_parameters": os.path.join(config[hostname]["plys"], "data/hyperparameters/reconstructions_by_parameters"),
         "ml_results": os.path.join(config[hostname]["plys"], "data/ml_results"),
         "plots": os.path.join(config[hostname]["plys"], "data/plots"),
+        "multilinear_results": os.path.join(config[hostname]["plys"], "data/multilinear_results")
     }
 
     return paths
