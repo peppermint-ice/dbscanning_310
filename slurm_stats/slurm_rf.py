@@ -115,5 +115,5 @@ if __name__ == '__main__':
     except ValueError:
         print('A small dataset. Cannot calculate')
     print(results_rf.shape)
-    output_file_path = os.path.splitext(file_path)[0] + '_results.csv'
+    output_file_path = os.path.splitext(file_path)[0] + '_results_rf.csv'
     results_rf.to_csv(output_file_path, index=False)

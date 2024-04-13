@@ -116,5 +116,5 @@ if __name__ == '__main__':
     except ValueError:
         print('A small dataset. Cannot calculate')
     print(results_xgb.shape)
-    output_file_path = os.path.splitext(file_path)[0] + '_results.csv'
+    output_file_path = os.path.splitext(file_path)[0] + '_results_xgb.csv'
     results_xgb.to_csv(output_file_path, index=False)
