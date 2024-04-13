@@ -43,6 +43,9 @@ if __name__ == '__main__':
     # Get the file path from the command-line argument
     file_path = sys.argv[1]
 
+    folder_paths = paths.get_paths()
+    csv_folder_path = folder_paths["ml_results"]
+
     # Read the CSV file specified by the command-line argument
     df = pd.read_csv(file_path)
 
@@ -99,7 +102,7 @@ if __name__ == '__main__':
         # print('r2 val: ', r2_val)
         # print('')
 
-        parameter_value = df['parameter_value'].unique()
+        parameter_value = df['parameter_value'].unique()[0]
         parameter_type = df['parameter_type'].unique()[0]
 
         current_results['Parameter_value'] = parameter_value
@@ -115,5 +118,6 @@ if __name__ == '__main__':
     except ValueError:
         print('A small dataset. Cannot calculate')
     print(results_rf.shape)
-    output_file_path = os.path.splitext(file_path)[0] + '_results_rf.csv'
-    results_rf.to_csv(output_file_path, index=False)
+    output_file = parameter_value + parameter_type + '_results_rf.csv'
+    output_file_path = os.path.join(csv_folder_path, output_file)
+    results_svm.to_csv(output_file_path, index=False)

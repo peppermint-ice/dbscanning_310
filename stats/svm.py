@@ -8,6 +8,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 from scipy.stats import randint, uniform
 from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import GridSearchCV
 
 from config import paths
 
@@ -66,22 +67,21 @@ if __name__ == '__main__':
     results_svm = pd.DataFrame()
     try:
         print('starting grid search')
-        # Define distributions for hyperparameters
-        param_dist = {
-            'C': uniform(loc=0.1, scale=10),  # Penalty parameter C of the error term
-            'epsilon': uniform(loc=0.01, scale=0.1),  # Epsilon in the epsilon-SVR model
+        # Define the grid of hyperparameters
+        param_grid = {
+            'C': [0.1, 1, 10],  # Penalty parameter C of the error term
+            'epsilon': [0.01, 0.1, 0.3],  # Epsilon in the epsilon-SVR model
             'kernel': ['linear', 'rbf', 'poly'],  # Kernel type
-            'degree': randint(1, 6),  # Degree of the polynomial kernel function
+            'degree': [1, 2, 3, 4, 5],  # Degree of the polynomial kernel function
             'gamma': ['scale', 'auto']  # Kernel coefficient for 'rbf', 'poly' and 'sigmoid'
         }
 
-        # Perform random search with cross-validation
-        random_search = RandomizedSearchCV(SVR(), param_distributions=param_dist, n_iter=100, cv=5,
-                                           scoring='neg_mean_squared_error')
-        random_search.fit(X_train, y_train)
+        # Perform grid search with cross-validation
+        grid_search = GridSearchCV(SVR(), param_grid, cv=5, scoring='neg_mean_squared_error')
+        grid_search.fit(X_train, y_train)
 
-        # Get the best hyperparameters found by random search
-        best_params = random_search.best_params_
+        # Get the best hyperparameters found by grid search
+        best_params = grid_search.best_params_
         print("Best Hyperparameters:", best_params)
 
         # Refactor model training to use the best hyperparameters
