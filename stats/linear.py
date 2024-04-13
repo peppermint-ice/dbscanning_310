@@ -131,6 +131,7 @@ def plot_prediction(linears):
         plt.tight_layout()
         plt.show()
 
+
 if __name__ == '__main__':
     print('Start running')
 

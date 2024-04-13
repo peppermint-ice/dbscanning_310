@@ -18,7 +18,7 @@ import trimesh
 
 
 def open_ply_file(file_path):
-    """ This function opens a ply file and returns it as a o3d object """
+    """ This function opens a ply file and returns it as an o3d object """
     point_cloud_data_file = o3d.io.read_point_cloud(file_path)
     return point_cloud_data_file
 
@@ -37,6 +37,7 @@ def export_ply_file(vertices, colors=None, output_filepath=None):
         o3d.io.write_point_cloud(output_filepath, point_cloud, write_ascii=True)
 
     return point_cloud
+
 
 def create_clusters(point_cloud_data_file, eps=0.15, min_samples=80):
     """
@@ -583,3 +584,8 @@ if __name__ == '__main__':
     if runtype == 'test':
         for x, y in folders_paths.items():
             print(x, y)
+        for file in os.listdir(folders_paths['plys']):
+            ply_file_path = os.path.join(folders_paths['plys'], file)
+            if os.path.isfile(ply_file_path) and ply_file_path.lower().endswith('.ply'):
+                print(file)
+                open_ply_file(os.path.join(folders_paths['plys'], file))

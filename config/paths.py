@@ -34,6 +34,8 @@ def get_paths():
         "convex_hull": os.path.join(config[hostname]["plys"], "shapes/convex_hull"),
         "data": os.path.join(config[hostname]["plys"], "data"),
         "hyperparameters": os.path.join(config[hostname]["plys"], "data/hyperparameters"),
+        "reconstructions_by_parameters": os.path.join(config[hostname]["plys"], "data/hyperparameters/reconstructions_by_parameters"),
+        "ml_results": os.path.join(config[hostname]["plys"], "data/ml_results"),
         "plots": os.path.join(config[hostname]["plys"], "data/plots"),
     }
 
