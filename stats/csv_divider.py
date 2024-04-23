@@ -5,7 +5,7 @@ from config import paths
 
 # Get path
 folder_paths = paths.get_paths()
-csv_import_path = os.path.join(folder_paths["data"], '001final.csv')
+csv_import_path = os.path.join(folder_paths["data"], '002final.csv')
 csv_folder_path = folder_paths["reconstructions_by_parameters"]
 
 

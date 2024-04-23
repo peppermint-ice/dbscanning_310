@@ -3,6 +3,7 @@ import os
 import sys
 
 from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
@@ -46,13 +47,13 @@ if __name__ == '__main__':
     # Get paths
     folder_paths = paths.get_paths()
     csv_export_path = os.path.join(folder_paths["hyperparameters"], 'rftest.csv')
-    csv_import_path = os.path.join(folder_paths["reconstructions_by_parameters"], 'marching_cubess0_3.csv')
+    csv_import_path = os.path.join(folder_paths["reconstructions_by_parameters"], 'alphas4_0.csv')
     df = pd.read_csv(csv_import_path)
 
     print(df['parameter_type'].unique())
 
     # First run of train-test split to set the desired columns
-    X_train, X_test, y_train, y_test = load_train_test_sets(df, by_year=False)
+    X_train, X_test, y_train, y_test = load_train_test_sets(df, by_year=True)
 
     keys = [
         'Parameter_name',
@@ -68,26 +69,8 @@ if __name__ == '__main__':
     current_results = dict.fromkeys(keys)
     results_rf = pd.DataFrame()
     try:
-        print('starting grid search')
-        # Define distributions for hyperparameters
-        param_dist = {
-            'n_estimators': randint(50, 200),  # Number of trees in the forest
-            'max_depth': [None] + list(randint(3, 10).rvs(5)),  # Maximum depth of the trees
-            'min_samples_split': randint(2, 20),  # Minimum number of samples required to split a node
-            'min_samples_leaf': randint(1, 10)  # Minimum number of samples required at each leaf node
-        }
-
-        # Perform random search with cross-validation
-        random_search = RandomizedSearchCV(RandomForestRegressor(), param_distributions=param_dist, n_iter=100, cv=5,
-                                           scoring='neg_mean_squared_error')
-        random_search.fit(X_train, y_train)
-
-        # Get the best hyperparameters found by random search
-        best_params = random_search.best_params_
-        print("Best Hyperparameters:", best_params)
-
         # Refactor model training to use the best hyperparameters
-        model = RandomForestRegressor(**best_params)
+        model = LinearRegression()
         model.fit(X_train, y_train)
 
         pred_cal = model.predict(X_train)

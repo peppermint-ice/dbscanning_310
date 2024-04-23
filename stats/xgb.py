@@ -8,6 +8,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 from scipy.stats import randint, uniform
 from sklearn.model_selection import RandomizedSearchCV
+from matplotlib import pyplot as plt
 
 from config import paths
 
@@ -51,7 +52,7 @@ if __name__ == '__main__':
     print(df['parameter_type'].unique())
 
     # First run of train-test split to set the desired columns
-    X_train, X_test, y_train, y_test = load_train_test_sets(df, by_year=True)
+    X_train, X_test, y_train, y_test = load_train_test_sets(df, by_year=False)
 
     keys = [
         'Parameter_name',
@@ -101,6 +102,17 @@ if __name__ == '__main__':
         # print('r2 cal: ', r2_cal)
         # print('r2 val: ', r2_val)
         # print('')
+
+        # Plot predicted vs real values
+        plt.figure(figsize=(10, 6))
+        plt.scatter(y_test, pred_val, color='blue', label='Predicted vs Real')
+        plt.plot(y_test, y_test, color='red', linewidth=2, label='Ideal Line')
+        plt.title('Predicted vs Real Values')
+        plt.xlabel('Real Values')
+        plt.ylabel('Predicted Values')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
 
         parameter_value = df['parameter_value'].unique()
         parameter_type = df['parameter_type'].unique()[0]
