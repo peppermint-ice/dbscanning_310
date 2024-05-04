@@ -5,9 +5,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
-from xgboost import XGBRegressor
-from sklearn.metrics import mean_squared_error, r2_score
-from scipy.stats import randint, uniform
+from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+from scipy.stats import randint
 from sklearn.model_selection import RandomizedSearchCV
 from sklearn.preprocessing import StandardScaler
 
@@ -92,10 +93,10 @@ def plot_predictions(y_true, y_pred, r2, parameter_value, parameter_type):
     plt.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], 'k--', lw=4)
     plt.xlabel('Measured Leaf Area')
     plt.ylabel('Predicted Leaf Area')
-    plt.title('Leaf Area Prediction: XGBoost\n{parameter_type}, {parameter_value}\nR2 Score: {:.2f}'.format(r2))
+    plt.title('Leaf Area Prediction: RF\n{parameter_type}, {parameter_value}\nR2 Score: {:.2f}'.format(r2))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(f'{parameter_value}_{parameter_type}_prediction_plot_xgb.png')
+    plt.savefig(f'{parameter_value}_{parameter_type}_prediction_plot_rf.png')
 
 
 
@@ -118,7 +119,6 @@ if __name__ == '__main__':
         'Parameter_name',
         'Parameter_value',
         'Regression_model',
-        'Correlating_parameter',
         'RMSE_score_calibration',
         'RMSE_score_validation',
         'R2_score_calibration',
@@ -126,19 +126,19 @@ if __name__ == '__main__':
         'Successful_reconstructions_test',
         'Successful_reconstructions_train']
     current_results = dict.fromkeys(keys)
-    results_xgb = pd.DataFrame()
+    results_rf = pd.DataFrame()
     try:
         print('starting grid search')
         # Define distributions for hyperparameters
         param_dist = {
-            'n_estimators': randint(50, 200),  # Number of boosting rounds
-            'max_depth': randint(3, 10),  # Maximum depth of the trees
-            'learning_rate': uniform(0.01, 0.3),  # Learning rate
-            'min_child_weight': randint(1, 6)  # Minimum sum of instance weight needed in a child
+            'n_estimators': randint(50, 200),  # Number of trees in the forest
+            'max_depth': [None] + list(randint(3, 10).rvs(5)),  # Maximum depth of the trees
+            'min_samples_split': randint(2, 20),  # Minimum number of samples required to split a node
+            'min_samples_leaf': randint(1, 10)  # Minimum number of samples required at each leaf node
         }
 
         # Perform random search with cross-validation
-        random_search = RandomizedSearchCV(XGBRegressor(), param_distributions=param_dist, n_iter=100, cv=5,
+        random_search = RandomizedSearchCV(RandomForestRegressor(), param_distributions=param_dist, n_iter=100, cv=5,
                                            scoring='neg_mean_squared_error')
         random_search.fit(X_train, y_train)
 
@@ -147,8 +147,7 @@ if __name__ == '__main__':
         print("Best Hyperparameters:", best_params)
 
         # Refactor model training to use the best hyperparameters
-        model = XGBRegressor(**best_params)
-
+        model = RandomForestRegressor(**best_params)
         # Bootstrap sampling
         X_train_samples, y_train_samples = bootstrap_sample(X_train, y_train)
 
@@ -176,18 +175,18 @@ if __name__ == '__main__':
 
         current_results['Parameter_value'] = parameter_value
         current_results['Parameter_name'] = parameter_type
-        current_results['Regression_model'] = 'XGBoost'
+        current_results['Regression_model'] = 'RandomForest'
         current_results['RMSE_score_calibration'] = mse_cal_mean
         current_results['RMSE_score_validation'] = mse_val_mean
         current_results['R2_score_calibration'] = r2_cal_mean
         current_results['R2_score_validation'] = r2_val_mean
         current_results['Successful_reconstructions_test'] = len(X_test)
         current_results['Successful_reconstructions_train'] = len(X_train)
-        results_xgb = pd.concat([results_xgb, pd.DataFrame([current_results])], ignore_index=True)
-        print(results_xgb.shape)
-        output_file = f'{parameter_value}_{parameter_type}_results_xgb2.csv'
+        results_rf = pd.concat([results_rf, pd.DataFrame([current_results])], ignore_index=True)
+        print(results_rf.shape)
+        output_file = f'{parameter_value}_{parameter_type}_results_rf2_noyear.csv'
         output_file_path = os.path.join(csv_folder_path, output_file)
-        results_xgb.to_csv(output_file_path, index=False)
+        results_rf.to_csv(output_file_path, index=False)
 
         # Plot predictions
         plot_predictions(y_test, model.predict(X_test), r2_val_mean, parameter_value, parameter_type)

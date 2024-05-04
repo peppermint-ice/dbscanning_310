@@ -92,11 +92,10 @@ def plot_predictions(y_true, y_pred, r2, parameter_value, parameter_type):
     plt.plot([y_true.min(), y_true.max()], [y_true.min(), y_true.max()], 'k--', lw=4)
     plt.xlabel('Measured Leaf Area')
     plt.ylabel('Predicted Leaf Area')
-    plt.title('Leaf Area Prediction: XGBoost\nR2 Score: {:.2f}'.format(r2))
+    plt.title('Leaf Area Prediction: XGBoost\n{parameter_type}, {parameter_value}\nR2 Score: {:.2f}'.format(r2))
     plt.grid(True)
     plt.tight_layout()
-    plt.savefig(f'{parameter_value}_{parameter_type}_prediction_plot.png')
-    plt.show()
+    plt.savefig(f'{parameter_value}_{parameter_type}_prediction_plot_xgb_no_year.png')
 
 
 if __name__ == '__main__':
@@ -118,7 +117,6 @@ if __name__ == '__main__':
         'Parameter_name',
         'Parameter_value',
         'Regression_model',
-        'Correlating_parameter',
         'RMSE_score_calibration',
         'RMSE_score_validation',
         'R2_score_calibration',
