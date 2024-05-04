@@ -185,7 +185,7 @@ if __name__ == '__main__':
         current_results['Successful_reconstructions_train'] = len(X_train)
         results_xgb = pd.concat([results_xgb, pd.DataFrame([current_results])], ignore_index=True)
         print(results_xgb.shape)
-        output_file = f'{parameter_value}_{parameter_type}_results_xgb.csv'
+        output_file = f'{parameter_value}_{parameter_type}_results_xgb2.csv'
         output_file_path = os.path.join(csv_folder_path, output_file)
         results_xgb.to_csv(output_file_path, index=False)
 
