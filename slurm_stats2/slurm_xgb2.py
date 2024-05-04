@@ -80,9 +80,9 @@ def preprocess_data(df, target_column='Measured_leaf_area', by_year=False):
 
 
 def bootstrap_sample(X, y, num_samples=100):
-    sample_indices = np.random.choice(range(len(X)), size=(num_samples, len(X)), replace=True)
-    X_samples = [X[idx] for idx in sample_indices]
-    y_samples = [y[idx] for idx in sample_indices]
+    sample_indices = np.random.choice(range(len(X)), size=(num_samples, len(X.columns)), replace=True)
+    X_samples = [X.iloc[idx] for idx in sample_indices]
+    y_samples = [y.iloc[idx] for idx in sample_indices]
     return X_samples, y_samples
 
 
