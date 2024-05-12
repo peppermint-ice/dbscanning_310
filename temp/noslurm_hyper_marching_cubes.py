@@ -6,10 +6,6 @@ import pandas as pd
 import time
 import sys
 
-# Extract start and end indices from command-line arguments
-start_index = int(sys.argv[1])
-end_index = int(sys.argv[2])
-
 
 # Get path
 folder_paths = paths.get_paths()
@@ -25,14 +21,14 @@ plys = os.listdir(corrected_folder_path)
 
 # Select desired marching_cubes values
 
-marching_cubes_values = [0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]
+marching_cubes_values = [1.5, 1.6, 1.7, 1.8, 1.9, 2, 2.1, 2.2, 2.3, 2.4, 2.5, 2.6, 2.7, 2.8, 2.9, 3]
 
 # Start time measurement
 start_time = time.time()
 
 for marching_cubes_value in marching_cubes_values:
     df = pd.DataFrame()
-    for file in plys[start_index - 1:end_index]:
+    for file in plys:
         ply_file_path = os.path.join(corrected_folder_path, file)
         print("marching_cubes value: " + str(marching_cubes_value))
         if os.path.isfile(ply_file_path) and ply_file_path.lower().endswith('.ply'):
@@ -59,7 +55,7 @@ for marching_cubes_value in marching_cubes_values:
                 iteration_time = time.time() - iteration_time
                 print("Time taken for this iteration: " + str(iteration_time) + " seconds")
 
-                csv_file_name = str(marching_cubes_value).replace(".", "_") + "marching_cubess" + str((start_index - 1)) + '.csv'
+                csv_file_name = str(marching_cubes_value).replace(".", "_") + 'marching_cubess_13.csv'
                 csv_file_path = os.path.join(csv_folder_path, csv_file_name)
                 print("CSV path: " + csv_file_path)
                 print(df.to_string())

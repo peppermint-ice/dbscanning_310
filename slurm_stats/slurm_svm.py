@@ -44,7 +44,7 @@ def load_train_test_sets(df, target_column='Measured_leaf_area', by_year=False):
 
 if __name__ == '__main__':
     # Get the file path from the command-line argument
-    file_path = sys.argv[1]
+    file_path = sys.argv[1] ## /reconstruction_by_parameters
 
     folder_paths = paths.get_paths()
     csv_folder_path = folder_paths["ml_results"]

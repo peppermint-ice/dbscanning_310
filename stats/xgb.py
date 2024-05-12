@@ -81,6 +81,7 @@ def preprocess_data(df, target_column='Measured_leaf_area', by_year=False):
 if __name__ == '__main__':
     # Get paths
     folder_paths = paths.get_paths()
+    csv_folder_path = folder_paths["ml_results"]
     csv_export_path = os.path.join(folder_paths["hyperparameters"], 'xgb_marching_cubess0_9.csv')
     csv_import_path = os.path.join(folder_paths["reconstructions_by_parameters"], 'marching_cubess0_9.csv')
     df = pd.read_csv(csv_import_path)
