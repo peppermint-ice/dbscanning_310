@@ -10,6 +10,7 @@ from scipy.stats import randint, uniform
 from sklearn.model_selection import RandomizedSearchCV
 from matplotlib import pyplot as plt
 from sklearn.preprocessing import StandardScaler
+from load_sets import load_train_test_sets
 
 from config import paths
 
@@ -89,7 +90,7 @@ if __name__ == '__main__':
     print(df['parameter_type'].unique())
 
     # First run of train-test split to set the desired columns
-    X_train, X_test, y_train, y_test, values = preprocess_data(df, by_year=False)
+    X_train, X_test, y_train, y_test = load_train_test_sets(df, by_year=False)
 
     keys = [
         'Parameter_name',
