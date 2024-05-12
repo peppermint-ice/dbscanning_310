@@ -32,5 +32,5 @@ for file in csvs:
         print(df_current.to_string())
         df = pd.concat([df, df_current], ignore_index=True)
 
-final_csv_file_path = os.path.join(csv_folder_path, '002final.csv')
+final_csv_file_path = os.path.join(csv_folder_path, '004final.csv')
 df.to_csv(final_csv_file_path, index=False)
