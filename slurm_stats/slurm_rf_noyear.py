@@ -9,6 +9,7 @@ from sklearn.metrics import r2_score
 from scipy.stats import randint
 from sklearn.model_selection import RandomizedSearchCV
 from load_sets import load_train_test_sets
+from load_sets import load_train_test_sets_elaborate
 
 from config import paths
 
@@ -29,7 +30,7 @@ if __name__ == '__main__':
     print(df['parameter_type'].unique())
 
     # First run of train-test split to set the desired columns
-    X_train, X_test, y_train, y_test = load_train_test_sets(df, by_year=False)
+    X_train, X_test, y_train, y_test = load_train_test_sets_elaborate(df, by_year=False)
 
     keys = [
         'Parameter_name',
