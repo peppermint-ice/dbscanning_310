@@ -2,14 +2,11 @@ import pandas as pd
 import os
 import sys
 
-from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 from scipy.stats import randint
-from sklearn.model_selection import RandomizedSearchCV
-from load_sets import load_train_test_sets
-from load_sets import load_train_test_sets_elaborate
+from sklearn.model_selection import RandomizedSearchCV, KFold
 
 from config import paths
 
@@ -29,8 +26,6 @@ if __name__ == '__main__':
     parameter_type = df['parameter_type'].unique()[0]
     print(df['parameter_type'].unique())
 
-    # First run of train-test split to set the desired columns
-    X_train, X_test, y_train, y_test = load_train_test_sets_elaborate(df, by_year=False)
 
     keys = [
         'Parameter_name',
@@ -54,46 +49,64 @@ if __name__ == '__main__':
             'min_samples_leaf': randint(1, 10)  # Minimum number of samples required at each leaf node
         }
 
-        # Perform random search with cross-validation
-        random_search = RandomizedSearchCV(RandomForestRegressor(), param_distributions=param_dist, n_iter=100, cv=5,
-                                           scoring='neg_mean_squared_error')
-        random_search.fit(X_train, y_train)
+        # Initialize KFold cross-validator
+        num_splits = 5
+        kf = KFold(n_splits=num_splits, shuffle=True, random_state=42)
 
-        # Get the best hyperparameters found by random search
-        best_params = random_search.best_params_
-        print("Best Hyperparameters:", best_params)
+        # Iterate through each fold
+        for i, (train_index, test_index) in enumerate(kf.split(df)):
+            X_train, X_test = (df.drop(
+                columns=['Measured_leaf_area', 'File_name', 'parameter_type', 'parameter_value', 'Year', 'Elongation',
+                         'Flatness', 'Sphericity', 'Compactness'],
+                inplace=False, axis=1).iloc[train_index],
+                               df.drop(columns=['Measured_leaf_area', 'File_name', 'parameter_type', 'parameter_value',
+                                                'Year', 'Elongation', 'Flatness', 'Sphericity', 'Compactness'],
+                                       inplace=False, axis=1).iloc[test_index])
+            y_train, y_test = df['Measured_leaf_area'].iloc[train_index], df['Measured_leaf_area'].iloc[test_index]
 
-        # Refactor model training to use the best hyperparameters
-        model = RandomForestRegressor(**best_params)
-        model.fit(X_train, y_train)
+            # Perform random search with cross-validation
+            random_search = RandomizedSearchCV(RandomForestRegressor(), param_distributions=param_dist, n_iter=100, cv=5,
+                                               scoring='neg_mean_squared_error')
+            random_search.fit(X_train, y_train)
 
-        pred_cal = model.predict(X_train)
-        pred_val = model.predict(X_test)
-        mse_cal = mean_squared_error(y_train, pred_cal)
-        mse_val = mean_squared_error(y_test, pred_val)
-        r2_cal = r2_score(y_train, pred_cal)
-        r2_val = r2_score(y_test, pred_val)
+            # Get the best hyperparameters found by random search
+            best_params = random_search.best_params_
+            print("Best Hyperparameters:", best_params)
 
-        # print(parameter_type, ': ', parameter_value)
-        # print('Correlating parameter: ', column)
-        # print('r2 cal: ', r2_cal)
-        # print('r2 val: ', r2_val)
-        # print('')
+            # Refactor model training to use the best hyperparameters
+            model = RandomForestRegressor(**best_params)
+            model.fit(X_train, y_train)
 
-        current_results['Parameter_value'] = parameter_value
-        current_results['Parameter_name'] = parameter_type
-        current_results['Regression_model'] = 'Random_forest'
-        current_results['RMSE_score_calibration'] = mse_cal
-        current_results['RMSE_score_validation'] = mse_val
-        current_results['R2_score_calibration'] = r2_cal
-        current_results['R2_score_validation'] = r2_val
-        current_results['Successful_reconstructions_test'] = len(X_test)
-        current_results['Successful_reconstructions_train'] = len(X_train)
-        results_rf = pd.concat([results_rf, pd.DataFrame([current_results])], ignore_index=True)
-        output_file = str(parameter_value) + parameter_type + '_results_noyear_rf.csv'
-        output_file_path = os.path.join(csv_folder_path, output_file)
-        results_rf.to_csv(output_file_path, index=False)
-        print(results_rf.shape)
+            pred_cal = model.predict(X_train)
+            pred_val = model.predict(X_test)
+            mse_cal = mean_squared_error(y_train, pred_cal)
+            mse_val = mean_squared_error(y_test, pred_val)
+            r2_cal = r2_score(y_train, pred_cal)
+            r2_val = r2_score(y_test, pred_val)
+
+            # print(parameter_type, ': ', parameter_value)
+            # print('Correlating parameter: ', column)
+            # print('r2 cal: ', r2_cal)
+            # print('r2 val: ', r2_val)
+            # print('')
+
+            current_results = {
+                'Parameter_name': df['parameter_type'].unique()[0],
+                'Parameter_value': df['parameter_value'].unique()[0],
+                'Regression_model': 'Random_forest',
+                'K_fold': i,
+                'RMSE_score_calibration': mse_cal,
+                'RMSE_score_validation': mse_val,
+                'R2_score_calibration': r2_cal,
+                'R2_score_validation': r2_val,
+                'Successful_reconstructions_test': len(X_test),
+                'Successful_reconstructions_train': len(X_train)
+            }
+            results_rf = pd.concat([results_rf, pd.DataFrame([current_results])], ignore_index=True)
+            output_file = str(parameter_value) + parameter_type + '_results_kf_rf.csv'
+            output_file_path = os.path.join(csv_folder_path, output_file)
+            results_rf.to_csv(output_file_path, index=False)
+            print(results_rf.shape)
     except ValueError:
         print('A small dataset. Cannot calculate')
 

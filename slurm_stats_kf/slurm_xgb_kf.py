@@ -2,14 +2,11 @@ import pandas as pd
 import os
 import sys
 
-from sklearn.model_selection import train_test_split
 from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 from scipy.stats import randint, uniform
 from sklearn.model_selection import RandomizedSearchCV, KFold
-from load_sets import load_train_test_sets
-from load_sets import load_train_test_sets_elaborate
 
 from config import paths
 
