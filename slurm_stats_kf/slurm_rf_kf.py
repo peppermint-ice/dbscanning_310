@@ -105,8 +105,7 @@ if __name__ == '__main__':
             results_rf = pd.concat([results_rf, pd.DataFrame([current_results])], ignore_index=True)
             output_file = str(parameter_value) + parameter_type + '_results_kf_rf.csv'
             output_file_path = os.path.join(csv_folder_path, output_file)
-            results_rf.to_csv(output_file_path, index=False)
             print(results_rf.shape)
     except ValueError:
         print('A small dataset. Cannot calculate')
-
+    results_rf.to_csv(output_file_path, index=False)
