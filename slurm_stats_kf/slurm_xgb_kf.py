@@ -102,3 +102,4 @@ if __name__ == '__main__':
             output_file_path = os.path.join(csv_folder_path, output_file)
     except ValueError:
         print('A small dataset. Cannot calculate')
+    results_xbg.to_csv(output_file_path, index=False)
