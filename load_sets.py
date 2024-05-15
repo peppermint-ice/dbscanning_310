@@ -38,14 +38,14 @@ def load_train_test_sets_elaborate(df, target_column='Measured_leaf_area', by_ye
     df_train = df[df['Year'] == 2023]
     df_test = df[df['Year'] == 2024]
     if by_year:
-        X_train = df_train.drop(columns=[target_column, 'File_name', 'parameter_type', 'parameter_value', 'Year', 'Surface_area', 'Elongation', 'Flatness', 'Sphericity', 'Compactness'],
+        X_train = df_train.drop(columns=[target_column, 'File_name', 'parameter_type', 'parameter_value', 'Year', 'Elongation', 'Flatness', 'Sphericity', 'Compactness'],
                                 inplace=False, axis=1)
         y_train = df_train[target_column]
-        X_test = df_test.drop(columns=[target_column, 'File_name', 'parameter_type', 'parameter_value', 'Year', 'Surface_area', 'Elongation', 'Flatness', 'Sphericity', 'Compactness'],
+        X_test = df_test.drop(columns=[target_column, 'File_name', 'parameter_type', 'parameter_value', 'Year', 'Elongation', 'Flatness', 'Sphericity', 'Compactness'],
                               inplace=False, axis=1)
         y_test = df_test[target_column]
     else:
-        df.drop(columns=['File_name', 'parameter_type', 'parameter_value', 'Year', 'Surface_area', 'Elongation', 'Flatness', 'Sphericity', 'Compactness'],
+        df.drop(columns=['File_name', 'parameter_type', 'parameter_value', 'Year', 'Elongation', 'Flatness', 'Sphericity', 'Compactness'],
                 inplace=True, axis=1)
         # Define the number of quantiles
         num_quantiles = int(10)
