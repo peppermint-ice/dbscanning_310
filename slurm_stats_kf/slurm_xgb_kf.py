@@ -7,7 +7,7 @@ from xgboost import XGBRegressor
 from sklearn.metrics import mean_squared_error
 from sklearn.metrics import r2_score
 from scipy.stats import randint, uniform
-from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import RandomizedSearchCV, KFold
 from load_sets import load_train_test_sets
 from load_sets import load_train_test_sets_elaborate
 
