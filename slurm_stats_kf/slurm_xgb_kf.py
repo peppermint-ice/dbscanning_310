@@ -97,9 +97,9 @@ if __name__ == '__main__':
                 'Successful_reconstructions_test': len(X_test),
                 'Successful_reconstructions_train': len(X_train)
             }
-            results_xbg = pd.concat([results_xbg, pd.DataFrame([current_results])], ignore_index=True)
+            results_xgb = pd.concat([results_xgb, pd.DataFrame([current_results])], ignore_index=True)
             output_file = str(parameter_value) + parameter_type + '_results_kf_xgb.csv'
             output_file_path = os.path.join(csv_folder_path, output_file)
     except ValueError:
         print('A small dataset. Cannot calculate')
-    results_xbg.to_csv(output_file_path, index=False)
+    results_xgb.to_csv(output_file_path, index=False)
