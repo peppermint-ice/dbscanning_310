@@ -1,6 +1,5 @@
 from config import paths
 import os
-import re
 import pandas as pd
 
 # Get path
@@ -8,7 +7,7 @@ folder_paths = paths.get_paths()
 
 # Set folder
 csv_folder_path = folder_paths["ml_results"]
-csv_export_path = os.path.join(folder_paths["data"], "combine_ML6_kf.csv")
+csv_export_path = os.path.join(folder_paths["data"], "combine_ML7_kf_no_outliers.csv")
 csvs = os.listdir(csv_folder_path)
 
 df = pd.DataFrame()
