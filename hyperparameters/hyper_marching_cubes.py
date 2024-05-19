@@ -43,8 +43,13 @@ for marching_cubes_value in marching_cubes_values:
                 # Open a ply
                 pcl = la.open_ply_file(ply_file_path)
 
-                # Create marching_cubes shapes
-                marching_cubes_shape = la.create_marching_cubes_shape(ply_file_path, marching_cubes_value)
+                # Define export path
+                value_folder_path = os.path.join(marching_cubes_folder_path, marching_cubes_value)
+                os.makedirs(value_folder_path, exist_ok=True)
+                mesh_export_path = os.path.join(value_folder_path, ply_file_path)
+
+                # Create marching_cubes shapes and save it
+                marching_cubes_shape = la.create_marching_cubes_shape(ply_file_path, marching_cubes_value, mesh_export_path)
                 total_volume = la.calculate_watertight_volume(marching_cubes_shape)
 
                 # Remember parameters

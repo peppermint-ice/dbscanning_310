@@ -43,8 +43,13 @@ for poisson_value in poisson_values:
                 # Open a ply
                 pcl = la.open_ply_file(ply_file_path)
 
+                # Define export path
+                value_folder_path = os.path.join(poisson_folder_path, poisson_value)
+                os.makedirs(value_folder_path, exist_ok=True)
+                mesh_export_path = os.path.join(value_folder_path, ply_file_path)
+
                 # Create poisson shapes
-                poisson_shape = la.create_poisson_shape(ply_file_path, poisson_value)
+                poisson_shape = la.create_poisson_shape(ply_file_path, poisson_value, mesh_export_path)
                 total_volume = la.calculate_watertight_volume(poisson_shape)
 
                 # Remember parameters

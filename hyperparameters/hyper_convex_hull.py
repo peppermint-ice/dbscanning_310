@@ -29,18 +29,17 @@ for file in plys[start_index-1:end_index]:
     if os.path.isfile(ply_file_path) and ply_file_path.lower().endswith('.ply'):
         # Set up iteration start time
         iteration_time = time.time()
-
-        # Set export folder for convex_hull shapes
-        convex_hull_export_file_path = os.path.join(convex_hull_folder_path, file)
         print(ply_file_path)
-        print(convex_hull_export_file_path)
 
         # Open a ply
         pcl = la.open_ply_file(ply_file_path)
 
+        # Define export path
+        mesh_export_path = os.path.join(convex_hull_folder_path, file)
+
         # Create convex_hull shapes
         radii_value = 5  # Adjust convex_hull depth as needed
-        convex_hull_shape = la.create_convex_hull_shape(ply_file_path, convex_hull_export_file_path)
+        convex_hull_shape = la.create_convex_hull_shape(ply_file_path, mesh_export_path)
         total_volume = la.calculate_watertight_volume(convex_hull_shape)
 
         # Remember parameters
