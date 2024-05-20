@@ -53,7 +53,7 @@ for ball_pivoting_value in ball_pivoting_values:
                 pcl = la.open_ply_file(ply_file_path)
 
                 # Define export path
-                value_folder_path = os.path.join(ball_pivoting_folder_path, ball_pivoting_value[0])
+                value_folder_path = os.path.join(ball_pivoting_folder_path, str(ball_pivoting_value[0]))
                 os.makedirs(value_folder_path, exist_ok=True)
                 mesh_export_path = os.path.join(value_folder_path, ply_file_path)
 
