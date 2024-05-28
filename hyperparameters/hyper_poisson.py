@@ -46,7 +46,7 @@ for poisson_value in poisson_values:
                 # Define export path
                 value_folder_path = os.path.join(poisson_folder_path, str(poisson_value))
                 os.makedirs(value_folder_path, exist_ok=True)
-                mesh_export_path = os.path.join(value_folder_path, ply_file_path)
+                mesh_export_path = os.path.join(value_folder_path, file)
 
                 # Create poisson shapes
                 poisson_shape = la.create_poisson_shape(ply_file_path, poisson_value, mesh_export_path)

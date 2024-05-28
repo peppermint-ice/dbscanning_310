@@ -46,7 +46,7 @@ for marching_cubes_value in marching_cubes_values:
                 # Define export path
                 value_folder_path = os.path.join(marching_cubes_folder_path, str(marching_cubes_value))
                 os.makedirs(value_folder_path, exist_ok=True)
-                mesh_export_path = os.path.join(value_folder_path, ply_file_path)
+                mesh_export_path = os.path.join(value_folder_path, file)
 
                 # Create marching_cubes shapes and save it
                 marching_cubes_shape = la.create_marching_cubes_shape(ply_file_path, marching_cubes_value, mesh_export_path)

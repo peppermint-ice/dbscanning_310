@@ -46,9 +46,11 @@ for alpha_value in alpha_values:
                 # Define export path
                 value_folder_path = os.path.join(alpha_folder_path, str(alpha_value))
                 os.makedirs(value_folder_path, exist_ok=True)
-                mesh_export_path = os.path.join(value_folder_path, ply_file_path)
+                mesh_export_path = os.path.join(value_folder_path, file)
 
                 # Create alpha shapes
+                print('was', ply_file_path)
+                print('is', mesh_export_path)
                 alpha_shape = la.create_alpha_shape(ply_file_path, alpha_value, mesh_export_path)
                 total_volume = la.calculate_watertight_volume(alpha_shape)
 
